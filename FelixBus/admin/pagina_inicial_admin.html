@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Administração - FelixBus</title>
+  <style>
+    /* Estilo base */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Barra de navegação */
+    #navbar {
+      background-color: #00b140; /* Cor da FlixBus */
+      padding: 10px 20px;
+      text-align: center;
+    }
+
+    #navbar a {
+      color: white;
+      font-size: 18px;
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 15px;
+    }
+
+    #navbar a:hover {
+      background-color: #009e2f;
+      border-radius: 4px;
+    }
+
+    /* Conteúdo da página */
+    #admin-content {
+      margin: 30px;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      color: #00b140;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .card p {
+      color: #555;
+    }
+
+    /* Botão de logout */
+    .logout-btn {
+      background-color: #e74c3c;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+      display: block;
+      width: 100px;
+      text-align: center;
+      margin: 20px auto;
+    }
+
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de navegação -->
+  <div id="navbar">
+    <a href="pagina_inicial_logado.html">Página Inicial</a>
+    <a href="gerenciar_usuarios.html">Gerenciar Usuários</a>
+    <a href="gerenciar_rotas.html">Gerenciar Rotas</a>
+    <a href="gerenciar_alertas.html">Gerenciar Alertas</a>
+    <a href="gerenciar_bilhetes.html">Gerenciar Bilhetes</a>
+    <a href="pagina_login.html" class="logout-btn">Logout</a>
+  </div>
+
+  <!-- Conteúdo do painel de administração -->
+  <div id="admin-content">
+    <h1>Painel de Administração</h1>
+
+    <!-- Card de boas-vindas -->
+    <div class="card">
+      <h3>Bem-vindo ao Painel de Administração, Admin!</h3>
+      <p>Aqui você pode gerenciar todos os aspectos do sistema, incluindo usuários, rotas, bilhetes e muito mais.</p>
+    </div>
+
+    <!-- Card de Gerenciamento de Usuários -->
+    <div class="card">
+      <h3>Gerenciar Usuários</h3>
+      <p>Adicione, edite ou remova usuários do sistema.</p>
+      <a href="gerenciar_usuarios.html">Acessar Gerenciamento de Usuários</a>
+    </div>
+
+    <!-- Card de Gerenciamento de Rotas -->
+    <div class="card">
+      <h3>Gerenciar Rotas</h3>
+      <p>Adicione, edite ou remova rotas de viagem no sistema.</p>
+      <a href="gerenciar_rotas.html">Acessar Gerenciamento de Rotas</a>
+    </div>
+
+    <!-- Card de Gerenciamento de Alertas -->
+    <div class="card">
+      <h3>Gerenciar Alertas</h3>
+      <p>Envie alertas e promoções para os usuários do sistema.</p>
+      <a href="gerenciar_alertas.html">Acessar Gerenciamento de Alertas</a>
+    </div>
+
+    <!-- Card de Gerenciamento de Bilhetes -->
+    <div class="card">
+      <h3>Gerenciar Bilhetes</h3>
+      <p>Controle e gerencie os bilhetes comprados pelos usuários.</p>
+      <a href="gerenciar_bilhetes.html">Acessar Gerenciamento de Bilhetes</a>
+    </div>
+  </div>
+</body>
+</html>
