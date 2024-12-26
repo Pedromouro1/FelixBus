@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Administrador - FlixBus</title>
-  <style>
+
     /* Estilo base */
     body {
       background-image: url('../../media/FlixBus-1024x800.jpg'); /* URL da imagem de fundo */
@@ -113,26 +107,4 @@
         padding: 10px 18px;
       }
     }
-  </style>
-</head>
-<body>
-  <div id="login-box">
-    <div id="login-header">Login de Administrador</div>
-    <form action="../admin/PgLoginAdmin.php" method="POST">
-      <div class="input-div">
-        <label for="user">Nome de Utilizador ou E-mail:</label>
-        <input type="text" id="user" name="user" placeholder="Digite o seu nome de utilizador ou e-mail" required>
-      </div>
-      <div class="input-div">
-        <label for="pass">Password:</label>
-        <input type="password" id="pass" name="pass" placeholder="Digite a sua senha" required>
-      </div>
-      <div id="actions">
-        <input type="submit" value="Entrar">
-        <a href="../FelixBus/Pgregisto.html">Ainda não tem conta? Registe-se</a> <!-- Link para página de registo de admins -->
-        <a href="../FelixBus/pagina_inicial.html">Voltar à página inicial</a>
-      </div>
-    </form>
-  </div>
-</body>
-</html>
+ 
