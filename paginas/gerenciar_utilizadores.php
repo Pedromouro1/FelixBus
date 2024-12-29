@@ -38,8 +38,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $message = $conn->query($sql) ? "Utilizador excluído com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Buscar utilizadores para listar
-$result = $conn->query("SELECT * FROM utilizadores");
+// Inicializar filtro de pesquisa
+$search = $_GET['search'] ?? '';
+
+// Consultar utilizadores com filtro de pesquisa
+$sql = "SELECT * FROM utilizadores WHERE nome LIKE '%$search%' OR email LIKE '%$search%' OR perfil LIKE '%$search%'";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +78,12 @@ $result = $conn->query("SELECT * FROM utilizadores");
     <?php if (isset($message)): ?>
         <p><?= $message ?></p>
     <?php endif; ?>
+
+    <!-- Barra de pesquisa -->
+    <form method="GET">
+        <input type="text" name="search" placeholder="Pesquisar por Nome, Email ou Perfil..." value="<?= htmlspecialchars($search) ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
 
     <button onclick="showForm('create')">Criar Novo Utilizador</button>
     <table border="1">
@@ -122,9 +132,9 @@ $result = $conn->query("SELECT * FROM utilizadores");
             <button type="submit">Salvar</button>
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
-
     </div>
-    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Voltar</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='gerenciar_utilizador.php';">Voltar</button>
 </body>
 <head>
     <meta charset="UTF-8">

@@ -39,8 +39,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $message = $conn->query($sql) ? "Rota excluída com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Buscar rotas para listar
-$result = $conn->query("SELECT * FROM rotas");
+// Inicializar filtro de pesquisa
+$search = $_GET['search'] ?? '';
+
+// Consultar rotas com filtro de pesquisa
+$sql = "SELECT * FROM rotas WHERE Origem LIKE '%$search%' OR Destino LIKE '%$search%' OR Preço LIKE '%$search%'";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -77,6 +81,12 @@ $result = $conn->query("SELECT * FROM rotas");
     <?php if (isset($message)): ?>
         <p><?= $message ?></p>
     <?php endif; ?>
+
+    <!-- Barra de pesquisa -->
+    <form method="GET">
+        <input type="text" name="search" placeholder="Pesquisar por Origem, Destino ou Preço..." value="<?= htmlspecialchars($search) ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
 
     <button onclick="showForm('create')">Criar Nova Rota</button>
     <table border="1">
@@ -128,7 +138,8 @@ $result = $conn->query("SELECT * FROM rotas");
         </form>
     </div>
 
-    <button type="button" onclick="window.location.href='pagina_inicial_admin.html';">Voltar</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='gerenciar_rotas.php';">Voltar</button>
 </body>
 <head>
     <meta charset="UTF-8">

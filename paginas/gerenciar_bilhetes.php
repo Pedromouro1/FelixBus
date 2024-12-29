@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-// Processar as ações de criar/editar/excluir
+// Processar ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
@@ -39,8 +39,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $message = $conn->query($sql) ? "Bilhete excluído com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Buscar bilhetes para listar
-$result = $conn->query("SELECT * FROM bilhetes");
+// Inicializar filtro de pesquisa
+$search = $_GET['search'] ?? '';
+
+// Consultar bilhetes com filtro de pesquisa
+$sql = "SELECT * FROM bilhetes WHERE Utilizador_id LIKE '%$search%' OR Rota_id LIKE '%$search%'";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -77,6 +81,12 @@ $result = $conn->query("SELECT * FROM bilhetes");
     <?php if (isset($message)): ?>
         <p><?= $message ?></p>
     <?php endif; ?>
+
+    <!-- Barra de pesquisa -->
+    <form method="GET">
+        <input type="text" name="search" placeholder="Pesquisar por ID do Utilizador ou ID da Rota..." value="<?= htmlspecialchars($search) ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
 
     <button onclick="showForm('create')">Criar Novo Bilhete</button>
     <table border="1">
@@ -129,6 +139,7 @@ $result = $conn->query("SELECT * FROM bilhetes");
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
     </div>
-    <button type="button" onclick="window.location.href='pagina_inicial_admin.html';">Voltar</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='gerenciar_bilhetes.php';">Voltar</button>
 </body>
 </html>

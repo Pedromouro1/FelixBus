@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-// Processar as ações de criar/editar/excluir
+// Processar ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
@@ -38,8 +38,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $message = $conn->query($sql) ? "Alerta excluído com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Buscar alertas para listar
-$result = $conn->query("SELECT * FROM alertas");
+// Inicializar filtro de pesquisa
+$search = $_GET['search'] ?? '';
+
+// Consultar alertas com filtro de pesquisa
+$sql = "SELECT * FROM alertas WHERE Titulo LIKE '%$search%'";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +78,12 @@ $result = $conn->query("SELECT * FROM alertas");
     <?php if (isset($message)): ?>
         <p><?= $message ?></p>
     <?php endif; ?>
+
+    <!-- Barra de pesquisa -->
+    <form method="GET">
+        <input type="text" name="search" placeholder="Pesquisar por título..." value="<?= htmlspecialchars($search) ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
 
     <button onclick="showForm('create')">Criar Novo Alerta</button>
     <table border="1">
@@ -124,11 +134,7 @@ $result = $conn->query("SELECT * FROM alertas");
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
     </div>
-    <button type="button" onclick="window.location.href='pagina_inicial_admin.html';">Voltar</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='gerenciar_alertas.php';">Voltar</button>
 </body>
-<head>
-    <meta charset="UTF-8">
-    <title>Gerenciar Alertas</title>
-    <link rel="stylesheet" href="style_gerenciar_alertas.css">
-</head>
 </html>
