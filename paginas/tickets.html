@@ -1,28 +1,196 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Bilhetes</title>
+    <title>Consulta de Viagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .search-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .search-container div {
+            flex: 1;
+            position: relative;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .radio-group input {
+            margin: 0;
+        }
+        .date-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f4f4f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .date-tab {
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .date-tab.selected {
+            background-color: #27ae60;
+            color: #fff;
+        }
+        .result-info {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+        }
+        .result-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result-card .details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-card .details div {
+            text-align: center;
+        }
+        .result-card .details .duration {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .result-card .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .result-card button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result-card button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gestão de Bilhetes</h1>
-    <p>Bem-vindo, <?= htmlspecialchars($_SESSION['user_name']); ?></p>
+    <div class="container">
+        <!-- Seleção de Ida/Volta -->
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="trip_type" value="ida" checked> Ida
+            </label>
+            <label>
+                <input type="radio" name="trip_type" value="ida_volta"> Ida e volta
+            </label>
+        </div>
 
-    <h2>Compra de Bilhetes</h2>
-    <?php if (isset($error)): ?>
-        <p style="color: red;"><?= htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-    <form method="POST" action="">
-        <label for="route">Rota:</label><br>
-        <input type="text" id="route" name="route" required><br>
-        <label for="date_time">Data e Hora:</label><br>
-        <input type="datetime-local" id="date_time" name="date_time" required><br>
-        <label for="price">Preço:</label><br>
-        <input type="number" id="price" name="price" step="0.01" min="0.01" required><br><br>
-        <button type="submit" name="buy_ticket">Comprar Bilhete</button>
-    </form>
-    <a href="logout.php">Sair</a>
+        <!-- Campos de Pesquisa -->
+        <div class="search-container">
+            <div>
+                <label for="from">De</label>
+                <input type="text" id="from" name="from" placeholder="Lisboa">
+            </div>
+            <div>
+                <label for="to">Para</label>
+                <input type="text" id="to" name="to" placeholder="Castelo Branco">
+            </div>
+            <div>
+                <label for="date">Ida</label>
+                <input type="date" id="date" name="date" value="2024-01-23">
+            </div>
+            <div>
+                <label for="passengers">Passageiros</label>
+                <select id="passengers" name="passengers">
+                    <option value="1">1 Adulto</option>
+                    <option value="2">2 Adultos</option>
+                    <option value="3">3 Adultos</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabs de Data -->
+        <div class="date-tabs">
+            <div class="date-tab">qua., 22 jan.</div>
+            <div class="date-tab selected">qui., 23 jan.</div>
+            <div class="date-tab">sex., 24 jan.</div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="result-info">
+            5 resultados
+        </div>
+
+        <!-- Cartões de Resultado -->
+        <div class="result-card">
+            <div class="details">
+                <div>
+                    <div>08:00</div>
+                    <small>Lisboa (Oriente)</small>
+                </div>
+                <div class="duration">2:20 h</div>
+                <div>
+                    <div>10:20</div>
+                    <small>Castelo Branco (Terminal Rodoviário)</small>
+                </div>
+            </div>
+            <div class="price">€ 4,49</div>
+            <button>Continuar</button>
+        </div>
+        <!-- Replique mais "result-card" se necessário para mais resultados -->
+    </div>
 </body>
 </html>

@@ -145,14 +145,14 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       <a href="#">Ajuda</a>
     </nav>
     <div class="user-actions">
-      <?php if ($loggedIn): ?>
-        <a href="logout.php">Logout</a>
-        
-      <?php else: ?>
-        <a href="PgLogin.html">Login</a>
-        <a href="Pgregisto.html">Registo</a>
-      <?php endif; ?>
-    </div>
+  <?php if ($loggedIn): ?>
+    <a href="perfil.php">Perfil</a>
+    <a href="logout.php">Logout</a>
+  <?php else: ?>
+    <a href="PgLogin.html">Login</a>
+    <a href="Pgregisto.html">Registo</a>
+  <?php endif; ?>
+   </div>
   </header>
 
   <!-- Banner -->
