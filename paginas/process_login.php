@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];          // ID do usuário
             $_SESSION['user_nome'] = $user['nome'];      // Nome do usuário
             $_SESSION['user_perfil'] = $user['perfil'];  // Perfil do usuário
+            $_SESSION['logged_in'] = true;              // Indica que o usuário está logado
             // Verificar o cargo do utilizador
             if ($user['perfil'] === 'administrador') {
                 // Redirecionar para a página do administrador
@@ -46,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                  // Exibir mensagem e redirecionar para a página do utilizador comum
                 echo "<script>alert('Bem vindo!');
-                window.location.href = 'pagina_inicial.html';
+                window.location.href = 'pagina_inicial.php';
               </script>";
               exit();
             }
         } else {
             echo "<script>alert('Password incorreta, tente novamente.');
-                window.location.href = 'PgLogin.html';
+                window.location.href = 'PgLogin.php';
               </script>";
         }
     } else {
