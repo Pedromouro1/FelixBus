@@ -134,7 +134,7 @@ $result = $conn->query($sql);
         </form>
     </div>
     <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
-    <button type="submit" onclick="window.location.href='gerenciar_utilizador.php';">Voltar</button>
+    <button type="submit" onclick="window.location.href='gerenciar_utilizadores.php';">Voltar</button>
 </body>
 <head>
     <meta charset="UTF-8">
