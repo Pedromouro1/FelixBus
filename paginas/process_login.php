@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "<script>alert('Bem vindo!');
                 window.location.href = 'pagina_inicial.html';
               </script>";
-        exit();
+              exit();
             }
         } else {
             echo "<script>alert('Password incorreta, tente novamente.');
