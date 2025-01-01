@@ -122,6 +122,41 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       background-color: #85b800;
     }
 
+    /* Informações da Empresa */
+    .company-info {
+      background-color: #f4f4f4;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+      border-top: 3px solid #99cc00;
+    }
+
+    .company-info h2 {
+      margin: 0 0 10px;
+      color: #009e2f;
+    }
+
+    .company-info p {
+      margin: 5px 0;
+    }
+
+    .map-container {
+  margin: 10px 0;
+  border: 2px solid #99cc00;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+    .company-info a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    .company-info a:hover {
+      text-decoration: underline;
+    }
+
     /* Rodapé */
     footer {
       background-color: #333;
@@ -129,6 +164,8 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       text-align: center;
       padding: 10px;
       margin-top: 20px;
+
+      
     }
   </style>
 </head>
@@ -137,8 +174,7 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
   <header>
     <div class="logo">FelixBus</div>
     <nav>
-      <a href="rotas.html">Rotas</a>
-      <a href="alertas.html">Alertas</a>
+      <a href="rotas.php">Rotas</a>
       <a href="tickets.html">Bilhetes</a>
       <a href="carteira.html">Carteira</a>
       <a href="#">Serviço</a>
@@ -196,6 +232,32 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       </div>
     </form>
   </div>
+
+<!-- Informações da Empresa -->
+<div class="company-info">
+  <h2>Sobre a FelixBus</h2>
+  <p><strong>Localização:</strong> Avenida Principal, 123, Lisboa, Portugal</p>
+  
+  <p><strong>Contactos:</strong> +351 123 456 789 | <a href="mailto:info@felixbus.com">info@felixbus.com</a></p>
+  <p><strong>Horários de Funcionamento:</strong></p>
+  <ul>
+    <br>Segunda a Sexta: 08:00 - 20:00</br>
+    <br>Sábado: 09:00 - 18:00</br>
+    <br>Domingo: Encerrado</br>
+  </ul>
+
+  <div class="map-container">
+    <iframe 
+    src="https://www.google.com/maps/embed/v1/place?q=Avenida%20Principal,%20123,%20Lisboa,%20Portugal&key=AIzaSyBeU8lhlwJ1zWfn-N1P2m2JLWpUtzjzoz4" 
+      width="100%" 
+      height="300" 
+      style="border:0;" 
+      allowfullscreen="" 
+      loading="lazy">
+    </iframe>
+  </div>
+
+</div>
 
   <!-- Rodapé -->
   <footer>
