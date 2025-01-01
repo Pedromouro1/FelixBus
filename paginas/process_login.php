@@ -3,8 +3,8 @@ session_start();
 
 // Conexão com a base de dados
 $servername = "localhost";
-$username = "root"; // Usuário padrão do MySQL
-$password = ""; // Senha do MySQL
+$username = "root";
+$password = "";
 $dbname = "FelixBus";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -33,19 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($password === $user['password']) { // Comparar diretamente
 
-            $_SESSION['user_id'] = $user['id'];          // ID do usuário
-            $_SESSION['user_nome'] = $user['nome'];      // Nome do usuário
-            $_SESSION['user_perfil'] = $user['perfil'];  // Perfil do usuário
-            $_SESSION['logged_in'] = true;              // Indica que o usuário está logado
+            // Ajustado para usar 'Utilizador_id' de forma consistente
+            $_SESSION['Utilizador_id'] = $user['id'];          // ID do usuário
+            $_SESSION['user_nome'] = $user['nome'];           // Nome do usuário
+            $_SESSION['user_perfil'] = $user['perfil'];       // Perfil do usuário
+            $_SESSION['logged_in'] = true;                   // Indica que o usuário está logado
+
             // Verificar o cargo do utilizador
             if ($user['perfil'] === 'administrador') {
-                // Redirecionar para a página do administrador
                 echo "<script> alert('Bem vindo! Administrador!');
                 window.location.href = 'pagina_inicial_admin.html';
               </script>";
               exit();
             } else {
-                 // Exibir mensagem e redirecionar para a página do utilizador comum
                 echo "<script>alert('Bem vindo!');
                 window.location.href = 'pagina_inicial.php';
               </script>";
