@@ -1,71 +1,147 @@
 <?php
-session_start();
-require 'db_connection.php';
+session_start(); // Iniciar a sessão
 
-// Verifica se o usuário está logado
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+// Verificar se o usuário está logado
+if (!isset($_SESSION['Utilizador_id'])) {
+    die("Acesso negado. Faça login para visualizar os bilhetes.");
 }
 
-$user_id = $_SESSION['user_id'];
+// ID do usuário logado
+$Utilizador_id = $_SESSION['Utilizador_id'];
 
-// Busca os bilhetes do usuário
-$stmt = $conn->prepare("SELECT * FROM tickets WHERE user_id = ? ORDER BY date_time DESC");
-$stmt->bind_param("i", $user_id);
+// Conexão com o banco de dados
+$conn = new mysqli("localhost", "root", "", "FelixBus");
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Inicializar filtro de pesquisa
+$filterRota_id = $_GET['rota_id'] ?? '';
+$filterHorario = $_GET['horario'] ?? '';
+
+// Inicializar $types e $params
+$types = 'i'; // 'i' para Inteiro (Utilizador_id)
+$params = [$Utilizador_id];
+
+// Construir a query SQL dinamicamente com filtros
+$sql = "SELECT * FROM bilhetes WHERE Utilizador_id = ?";
+if (!empty($filterRota_id)) {
+    $sql .= " AND Rota_id LIKE ?";
+    $params[] = '%' . $filterRota_id . '%';
+    $types .= 's';
+}
+if (!empty($filterHorario)) {
+    $sql .= " AND Horario LIKE ?";
+    $params[] = '%' . $filterHorario . '%';
+    $types .= 's';
+}
+
+$stmt = $conn->prepare($sql);
+if ($types) {
+    $stmt->bind_param($types, ...$params);
+}
 $stmt->execute();
 $result = $stmt->get_result();
-$tickets = $result->fetch_all(MYSQLI_ASSOC);
 
-// Compra de bilhete
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_ticket'])) {
-    $route = $_POST['route'];
-    $date_time = $_POST['date_time'];
-    $price = floatval($_POST['price']);
-
-    // Verifica o saldo da carteira
-    $wallet_stmt = $conn->prepare("SELECT balance FROM wallet WHERE user_id = ?");
-    $wallet_stmt->bind_param("i", $user_id);
-    $wallet_stmt->execute();
-    $wallet_result = $wallet_stmt->get_result();
-    $wallet = $wallet_result->fetch_assoc();
-
-    if (!$wallet || $wallet['balance'] < $price) {
-        $error = "Saldo insuficiente na carteira.";
-    } else {
-        // Deduz o valor da carteira
-        $update_wallet_stmt = $conn->prepare("UPDATE wallet SET balance = balance - ? WHERE user_id = ?");
-        $update_wallet_stmt->bind_param("di", $price, $user_id);
-        $update_wallet_stmt->execute();
-
-        // Registra o bilhete
-        $ticket_stmt = $conn->prepare("INSERT INTO tickets (user_id, route, date_time, price) VALUES (?, ?, ?, ?)");
-        $ticket_stmt->bind_param("issd", $user_id, $route, $date_time, $price);
-        $ticket_stmt->execute();
-
-        header("Location: tickets.php");
-        exit();
-    }
-}
-
-// Alterar/Anular bilhete
-if (isset($_GET['cancel_ticket']) && isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    // Verifica se o bilhete pertence ao usuário
-    $stmt = $conn->prepare("SELECT * FROM tickets WHERE id = ? AND user_id = ?");
-    $stmt->bind_param("ii", $id, $user_id);
-    $stmt->execute();
-    $ticket = $stmt->get_result()->fetch_assoc();
-
-    if ($ticket) {
-        $cancel_stmt = $conn->prepare("UPDATE tickets SET status = 'canceled' WHERE id = ?");
-        $cancel_stmt->bind_param("i", $id);
-        $cancel_stmt->execute();
-        header("Location: tickets.php");
-        exit();
-    } else {
-        $error = "Bilhete não encontrado ou não autorizado.";
-    }
+// Processar os resultados em uma matriz
+$bilhetes = [];
+while ($row = $result->fetch_assoc()) {
+    $bilhetes[] = $row;
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar bilhetes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        form input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex: 1;
+        }
+        form button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .no-results {
+            margin-top: 20px;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consultar bilhetes</h1>
+    <form method="GET">
+        <input type="text" name="rota_id" placeholder="Rota ID..." value="<?= htmlspecialchars($filterRota_id) ?>">
+        <input type="text" name="horario" placeholder="Horário..." value="<?= htmlspecialchars($filterHorario) ?>">
+        <button type="submit">Pesquisar</button>
+    </form>
+
+    <?php if (!empty($bilhetes)): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID do Utilizador</th>
+                    <th>ID da Rota</th>
+                    <th>Data da Viagem</th>
+                    <th>Horário</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($bilhetes as $bilhete): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($bilhete['Utilizador_id'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($bilhete['Rota_id'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($bilhete['Data_viagem'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($bilhete['Horario'] ?? '') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p class="no-results">Nenhum bilhete encontrado.</p>
+    <?php endif; ?>
+</body>
+</html>
