@@ -1,101 +1,184 @@
 <?php
 session_start();
-require 'db_connection.php';
 
-function getWalletBalance($conn, $user_id) {
-    // Busca o saldo atual do usuário
-    $stmt = $conn->prepare("SELECT Saldo FROM saldo WHERE Utilizador_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $wallet = $result->fetch_assoc();
-    $stmt->close();
+// Configurações do banco de dados
+$host = "localhost"; // Endereço do servidor (localhost para ambiente local)
+$user = "root"; // Usuário do banco de dados
+$password = ""; // Senha do banco de dados
+$dbname = "FelixBus"; // Nome da base de dados
 
-    return $wallet ? $wallet['Saldo'] : null;
+// Conexão com o banco de dados
+$conexao = new mysqli($host, $user, $password, $dbname);
+
+// Verifica se a conexão falhou
+if ($conexao->connect_error) {
+    die("Erro na conexão com o banco de dados: " . $conexao->connect_error);
 }
 
-function createWallet($conn, $user_id) {
-    // Cria a carteira para o usuário
-    $stmt = $conn->prepare("INSERT INTO saldo (Utilizador_id, Saldo) VALUES (?, 0.00)");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->close();
+// Obtém o ID do usuário atual da sessão
+$utilizador_id = $_SESSION['Utilizador_id'] ?? null;
+
+// Verifica se o ID do usuário está definido
+if (!$utilizador_id) {
+    die("Erro: Utilizador não autenticado.");
 }
 
-function updateWalletBalance($conn, $user_id, $amount, $action) {
-    // Atualiza o saldo com base na ação (adicionar ou retirar)
-    $query = ($action === 'add') 
-        ? "UPDATE saldo SET Saldo = Saldo + ? WHERE Utilizador_id = ?"
-        : "UPDATE saldo SET Saldo = Saldo - ? WHERE Utilizador_id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("di", $amount, $user_id);
-    $stmt->execute();
-    $stmt->close();
+// Consulta para obter o saldo atual do usuário
+$query = "SELECT Saldo FROM saldo WHERE Utilizador_id = ?";
+$stmt = $conexao->prepare($query);
+$stmt->bind_param('i', $utilizador_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$saldo = 0.00; // Valor inicial caso não exista saldo registrado
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $saldo = $row['Saldo'];
 }
 
-try {
-    // Verifica se o usuário está logado
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.php");
-        exit();
-    }
+// Verifica se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $acao = $_POST['acao']; // Pode ser 'adicionar' ou 'retirar'
+    $valor = floatval($_POST['valor']);
 
-    $user_id = $_SESSION['user_id'];
-
-    // Inicia uma transação
-    $conn->begin_transaction();
-
-    // Busca o saldo ou cria a carteira, caso não exista
-    $balance = getWalletBalance($conn, $user_id);
-    if ($balance === null) {
-        createWallet($conn, $user_id);
-        $balance = 0.00;
-    }
-
-    // Manipula as operações de saldo
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
-
-        // Validação do valor inserido
-        if ($amount === false || $amount <= 0) {
-            throw new Exception("Valor inválido. Insira um valor positivo.");
-        }
-
-        if ($action === 'add') {
-            // Adicionar saldo
-            updateWalletBalance($conn, $user_id, $amount, 'add');
-        } elseif ($action === 'withdraw') {
-            // Verifica saldo antes de retirar
-            if ($balance >= $amount) {
-                updateWalletBalance($conn, $user_id, $amount, 'withdraw');
+    if ($valor > 0) {
+        if ($acao === 'adicionar') {
+            $saldo += $valor; // Adiciona o valor ao saldo
+        } elseif ($acao === 'retirar') {
+            if ($saldo >= $valor) {
+                $saldo -= $valor; // Subtrai o valor do saldo
             } else {
-                throw new Exception("Saldo insuficiente.");
+                $erro = 'Saldo insuficiente.';
             }
-        } else {
-            throw new Exception("Ação inválida.");
         }
 
-        // Confirma a transação
-        $conn->commit();
-
-        // Redireciona para a página atual para exibir as alterações
-        header("Location: wallet.php");
-        exit();
+        // Atualiza o saldo no banco de dados
+        if (!isset($erro)) {
+            $update_query = "UPDATE saldo SET Saldo = ? WHERE Utilizador_id = ?";
+            $stmt = $conexao->prepare($update_query);
+            $stmt->bind_param('di', $saldo, $utilizador_id);
+            $stmt->execute();
+        }
+    } else {
+        $erro = 'Por favor, insira um valor válido.';
     }
-} catch (Exception $e) {
-    // Reverte a transação em caso de erro
-    if ($conn->in_transaction) {
-        $conn->rollback();
-    }
-
-    // Define a mensagem de erro para exibição
-    $error = $e->getMessage();
-} finally {
-    // Fecha o statement e a conexão
-    if (isset($stmt)) {
-        $stmt->close();
-    }
-    $conn->close();
 }
+
+// Fecha a conexão
+$conexao->close();
 ?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão da Carteira</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            width: 48%;
+            padding: 10px;
+            margin: 5px 1%;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[name="acao"][value="adicionar"] {
+            background-color: #4CAF50;
+        }
+        button[name="acao"][value="adicionar"]:hover {
+            background-color: #45a049;
+        }
+        button[name="acao"][value="retirar"] {
+            background-color: #f44336;
+        }
+        button[name="acao"][value="retirar"]:hover {
+            background-color: #e53935;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestão da Carteira</h1>
+    </header>
+    <main>
+        <p>Bem-vindo</p>
+
+        <h2>Saldo Atual</h2>
+        <p><strong id="current-balance">€ <?php echo number_format($saldo, 2, ',', '.'); ?></strong></p>
+
+        <?php if (isset($erro)): ?>
+            <div class="error"><?php echo $erro; ?></div>
+        <?php endif; ?>
+
+        <h2>Adicionar/Retirar Saldo</h2>
+        <form method="POST">
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" step="0.01" min="0.01" required>
+            <div style="display: flex; justify-content: space-between;">
+                <button type="submit" name="acao" value="adicionar">Adicionar Saldo</button>
+                <button type="submit" name="acao" value="retirar">Retirar Saldo</button>
+            </div>
+        </form>
+        <a href="pagina_inicial.php">Sair</a>
+    </main>
+</body>
+</html>

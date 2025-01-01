@@ -176,7 +176,7 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
     <nav>
       <a href="rotas.php">Rotas</a>
       <a href="tickets.php">Bilhetes</a>
-      <a href="carteira.html">Carteira</a>
+      <a href="carteira.php">Carteira</a>
       <a href="#">Serviço</a>
       <a href="#">Ajuda</a>
     </nav>

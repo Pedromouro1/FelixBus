@@ -8,23 +8,38 @@ if ($conn->connect_error) {
 }
 
 // Verificar se o usuário está logado
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['Utilizador_id'])) {
     echo "<script>alert('Por favor, faça login primeiro.'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }
 
 // Obter o ID do usuário logado
-$userId = $_SESSION['user_id'];
+$userId = $_SESSION['Utilizador_id'];
 
-// Obter os dados do usuário da base de dados
-$sql = "SELECT * FROM utilizadores WHERE id = $userId";
-$result = $conn->query($sql);
+// Prevenir SQL Injection ao consultar a base de dados
+$sql = $conn->prepare("SELECT * FROM utilizadores WHERE id = ?");
+$sql->bind_param("i", $userId);
+$sql->execute();
+$result = $sql->get_result();
 
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
 } else {
     echo "<script>alert('Usuário não encontrado!'); window.location.href = 'PgLogin.html';</script>";
     exit();
+}
+
+// Obter o saldo do usuário da tabela 'saldo'
+$saldoSql = $conn->prepare("SELECT Saldo FROM saldo WHERE Utilizador_id = ?");
+$saldoSql->bind_param("i", $userId);
+$saldoSql->execute();
+$saldoResult = $saldoSql->get_result();
+
+if ($saldoResult->num_rows > 0) {
+    $saldoRow = $saldoResult->fetch_assoc();
+    $saldo = $saldoRow['Saldo'];
+} else {
+    $saldo = "0.00"; // Define saldo como 0 caso não tenha registro
 }
 
 // Atualizar os dados do usuário
@@ -38,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($password !== $confirmPassword) {
         echo "<script>alert('As senhas não coincidem!');</script>";
     } else {
-        $updateSql = "UPDATE utilizadores SET 
-            nome = '$nome', 
-            email = '$email', 
-            password = '$password' 
-            WHERE id = $userId";
+        // Hash da senha para maior segurança
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($conn->query($updateSql)) {
+        $updateSql = $conn->prepare("UPDATE utilizadores SET nome = ?, email = ?, password = ? WHERE id = ?");
+        $updateSql->bind_param("sssi", $nome, $email, $hashedPassword, $userId);
+
+        if ($updateSql->execute()) {
             echo "<script>alert('Dados atualizados com sucesso!'); window.location.href = 'perfil.php';</script>";
         } else {
             echo "<script>alert('Erro ao atualizar dados: " . $conn->error . "');</script>";
@@ -80,6 +95,12 @@ $conn->close();
 
         h1 {
             text-align: center;
+            color: #333;
+        }
+
+        .saldo {
+            font-size: 18px;
+            margin-bottom: 20px;
             color: #333;
         }
 
@@ -134,6 +155,12 @@ $conn->close();
 <body>
     <div class="container">
         <h1>Perfil</h1>
+
+        <!-- Exibição do saldo -->
+        <div class="saldo">
+            <strong>Saldo disponível:</strong> <?= htmlspecialchars(number_format($saldo, 2, ',', '.')) ?> €
+        </div>
+
         <form method="POST">
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" value="<?= htmlspecialchars($user['nome']) ?>" required>
