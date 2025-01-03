@@ -2,6 +2,7 @@
 session_start();
 
 // Configurações do banco de dados
+
 $host = "localhost"; // Endereço do servidor (localhost para ambiente local)
 $user = "root"; // Usuário do banco de dados
 $password = ""; // Senha do banco de dados
