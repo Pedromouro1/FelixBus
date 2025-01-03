@@ -1,0 +1,720 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+
+    width: 80%;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #00b140;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="date"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background-color: #00b140;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #007f29;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+/* Cabeçalho */
+header {
+    background: linear-gradient(135deg, #4CAF50, #2e7d32); /* Gradiente de verde */
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+    font-size: 2rem;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+    border-bottom: 3px solid #1b5e20; /* Linha separadora mais forte */
+}
+
+main {
+    max-width: 600px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+h1, h2 {
+    text-align: center;
+}
+.error {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+form {
+    margin-top: 20px;
+}
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+button {
+    width: 48%;
+    padding: 10px;
+    margin: 5px 1%;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button[name="acao"][value="adicionar"] {
+    background-color: #4CAF50;
+}
+button[name="acao"][value="adicionar"]:hover {
+    background-color: #45a049;
+}
+button[name="acao"][value="retirar"] {
+    background-color: #f44336;
+}
+button[name="acao"][value="retirar"]:hover {
+    background-color: #e53935;
+}
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #4CAF50;
+}
+a:hover {
+    text-decoration: underline;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+  }
+
+  /* Cabeçalho */
+  header {
+    background-color: #99cc00; /* Cor verde da FelixBus */
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header .logo {
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  header nav {
+    display: flex;
+    gap: 20px;
+  }
+
+  header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .user-actions a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #009e2f;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .user-actions a:hover {
+    background-color: #007a24;
+  }
+
+  /* Seção de banner */
+  .banner {
+    background-image: url('FelixBus-1024x800.jpg'); /* Substitua pelo caminho correto */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .banner h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Formulário de busca */
+  .search-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: -50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .search-form label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .search-form input,
+  .search-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .search-form input[type="submit"] {
+    background-color: #99cc00;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 20px;
+  }
+
+  .search-form input[type="submit"]:hover {
+    background-color: #85b800;
+  }
+
+  /* Informações da Empresa */
+  .company-info {
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 3px solid #99cc00;
+  }
+
+  .company-info h2 {
+    margin: 0 0 10px;
+    color: #009e2f;
+  }
+
+  .company-info p {
+    margin: 5px 0;
+  }
+
+  .map-container {
+margin: 10px 0;
+border: 2px solid #99cc00;
+border-radius: 8px;
+overflow: hidden;
+}
+
+  .company-info a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .company-info a:hover {
+    text-decoration: underline;
+  }
+
+  /* Rodapé */
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+
+    
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+form {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 600px; /* Define largura máxima do formulário */
+}
+
+form input {
+    padding: 12px; /* Aumenta o tamanho dos campos */
+    font-size: 16px; /* Torna o texto mais legível */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1; /* Faz os campos crescerem igualmente */
+}
+
+form button {
+    padding: 10px 20px; /* Botão maior */
+    background-color: rgb(0, 189, 22);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #1bb300;
+}
+
+table {
+    width: 80%; /* Ajusta a largura da tabela */
+    margin: 20px auto; /* Centraliza a tabela */
+    border-collapse: collapse;
+    background-color: white; /* Fundo branco maior */
+    border-radius: 8px; /* Bordas arredondadas */
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+th, td {
+    padding: 15px; /* Aumenta o espaço interno */
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px; /* Tamanho do texto */
+}
+
+th {
+    background-color: #01b61c;
+    color: white;
+    font-size: 16px; /* Tamanho do texto maior */
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.no-results {
+    margin-top: 20px;
+    color: #555;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background-color: white;
+    padding: 30px; /* Aumenta o espaço interno */
+    border-radius: 10px; /* Bordas mais arredondadas */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais visível */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.saldo {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilos Globais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;  /* Tom mais suave para o fundo */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Estilos para o Formulário */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px auto;
+    justify-content: center;
+    max-width: 600px;
+    align-items: center;
+}
+
+/* Remover estilos de form padrão do agente do usuário */
+form {
+    display: block;
+    margin-top: 0;
+}
+
+/* Melhorar a usabilidade e aparência do botão e outros inputs */
+input, button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;  /* Garante que o padding não afete a largura */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    form {
+        flex-direction: column;  /* Empilhar os itens em telas pequenas */
+        align-items: flex-start;
+    }
+
+    input, button {
+        width: 100%;  /* Inputs e botões ocupam a largura total */
+    }
+}
+
+
+.back-button {
+    margin-top: 15px;
+    width: 96.5%;
+    padding: 10px;
+    background-color: #01b516;
+    color: white;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.back-button:hover {
+    background-color: #00b303;
+}
+
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 0 10px;
+}
+
+header {
+    background-color: #98c21c;
+    color: #fff;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+form input, form button {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form input {
+    flex: 1 1 calc(33% - 10px);
+}
+
+form button {
+    flex: 1 1 100%;
+    background-color: #98c21c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #7ea515;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #98c21c;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.highlight {
+    background-color: #dff0d8;
+}
+
+.continue-button {
+    display: inline-block;
+    background-color: #98c21c;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.continue-button:hover {
+    background-color: #7ea515;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #bbb;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Cabeçalho */
+header {
+    background: linear-gradient(135deg, #4CAF50, #2e7d32); /* Gradiente de verde */
+    color: white;
+    border-bottom: 3px solid #1b5e20; /* Linha separadora mais forte */
+}
+
+body {
+    background-image: url('../../media/FlixBus-1024x800.jpg'); /* URL da imagem de fundo */
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Caixa de registro */
+  #registro-box {
+    max-width: 400px;
+    margin: 10vh auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo semitransparente */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+
+  /* Cabeçalho do formulário */
+  #registro-header {
+    background-color: #00b140;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+  }
+
+  /* Estilo dos campos */
+  .input-div {
+    margin: 15px 0;
+    text-align: left;
+  }
+
+  .input-div label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .input-div input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+  }
+
+  /* Botão de ação */
+  #actions {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  input[type="submit"] {
+    background-color: #00b140; /* Cor da FlixBus */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #009e2f;
+  }
+
+  /* Links */
+  a {
+    display: block;
+    margin-top: 10px;
+    color: #00b140;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsividade */
+  @media (max-width: 500px) {
+    #registro-box {
+      padding: 15px;
+      margin: 5vh auto;
+    }
+
+    #registro-header {
+      font-size: 18px;
+    }
+
+    input[type="submit"] {
+      font-size: 13px;
+      padding: 10px 18px;
+    }
+  }
+    

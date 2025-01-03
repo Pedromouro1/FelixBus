@@ -34,35 +34,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Consultar Rotas</title>
     <link rel="stylesheet" href="style_consultar_rotas.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #98c21c;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .route {
-            background: #f1f1f1;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="styleCliente.css">
 </head>
 <body>
     <h1>Consultar Rotas</h1>
