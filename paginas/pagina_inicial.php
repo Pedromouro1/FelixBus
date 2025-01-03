@@ -37,42 +37,7 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
     <h1>Descobre Portugal e a Europa</h1>
   </div>
 
-  <!-- Formulário de busca -->
-  <div class="search-form">
-    <form action="resultados.php" method="GET">
-      <div>
-        <label>
-          <input type="radio" name="tipo" value="ida" checked> Ida
-        </label>
-        <label>
-          <input type="radio" name="tipo" value="ida_volta"> Ida e volta
-        </label>
-      </div>
-      <div>
-        <label for="de">De:</label>
-        <input type="text" id="de" name="de" placeholder="Origem" required>
-      </div>
-      <div>
-        <label for="para">Para:</label>
-        <input type="text" id="para" name="para" placeholder="Destino" required>
-      </div>
-      <div>
-        <label for="data">Ida:</label>
-        <input type="date" id="data" name="data" required>
-      </div>
-      <div>
-        <label for="passageiros">Passageiros:</label>
-        <select id="passageiros" name="passageiros">
-          <option value="1">1 Adulto(a)</option>
-          <option value="2">2 Adultos(as)</option>
-          <option value="3">3 Adultos(as)</option>
-        </select>
-      </div>
-      <div>
-        <input type="submit" value="Procurar">
-      </div>
-    </form>
-  </div>
+  
 
 <!-- Informações da Empresa -->
 <div class="company-info">

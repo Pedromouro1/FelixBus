@@ -39,21 +39,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_perfil'] = $user['perfil'];       // Perfil do usuário
             $_SESSION['logged_in'] = true;                   // Indica que o usuário está logado
 
-            // Verificar o cargo do utilizador
-            if ($user['perfil'] === 'administrador') {
-                echo "<script> alert('Bem vindo! Administrador!');
-                window.location.href = 'pagina_inicial_admin.html';
-              </script>";
-              exit();
-            } else {
-                echo "<script>alert('Bem vindo!');
-                window.location.href = 'pagina_inicial.php';
-              </script>";
-              exit();
-            }
+          // Verificar o cargo do utilizador
+if ($user['perfil'] === 'administrador') {
+  echo "<script> 
+          alert('Bem vindo, Administrador!');
+          window.location.href = 'pagina_inicial_admin.html';
+        </script>";
+  exit();
+} elseif ($user['perfil'] === 'funcionário') {
+  echo "<script> 
+          alert('Bem vindo, Funcionário!');
+          window.location.href = 'pagina_inicial_funcionario.html';
+        </script>";
+  exit();
+} else {
+  echo "<script>
+          alert('Bem vindo!');
+          window.location.href = 'pagina_inicial.php';
+        </script>";
+  exit();
+}
         } else {
             echo "<script>alert('Password incorreta, tente novamente.');
-                window.location.href = 'PgLogin.php';
+                window.location.href = 'PgLogin.html';
               </script>";
         }
     } else {
