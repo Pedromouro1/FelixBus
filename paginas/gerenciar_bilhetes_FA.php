@@ -41,6 +41,7 @@ $sql = "SELECT * FROM bilhetes WHERE Utilizador_id LIKE '%$search%' OR Rota_id L
 $result = $conn->query($sql);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>

@@ -110,6 +110,8 @@ $result = $conn->query($sql);
         </form>
     </div>
 
+
+    
     <button type="submit" onclick="window.location.href='pagina_inicial_funcionario.html';">Inicio</button>
     <button type="submit" onclick="window.location.href='gerenciar_saldo_FA.php';">Voltar</button>
 </body>
