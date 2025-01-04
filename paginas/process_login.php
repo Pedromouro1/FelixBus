@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 
 // Conexão com a base de dados
 $servername = "localhost";
@@ -22,52 +22,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prevenir SQL Injection
     $usernameOrEmail = $conn->real_escape_string($usernameOrEmail);
-    $password = $conn->real_escape_string($password);
+    $encryptedPassword = md5($password); // Criptografa a senha inserida com MD5
 
     // Consultar a base de dados
-    $sql = "SELECT * FROM utilizadores WHERE (Nome = '$usernameOrEmail' OR Email = '$usernameOrEmail')";
+    $sql = "SELECT * FROM utilizadores WHERE (nome = '$usernameOrEmail' OR email = '$usernameOrEmail')";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        if ($password === $user['password']) { // Comparar diretamente
+        // Comparar a senha criptografada
+        if ($encryptedPassword === $user['password']) { // Certifique-se que a coluna se chama 'password'
+            // Iniciar a sessão do usuário
+            $_SESSION['Utilizador_id'] = $user['id'];
+            $_SESSION['user_nome'] = $user['nome'];
+            $_SESSION['user_perfil'] = $user['perfil'];
+            $_SESSION['logged_in'] = true;
 
-            // Ajustado para usar 'Utilizador_id' de forma consistente
-            $_SESSION['Utilizador_id'] = $user['id'];          // ID do usuário
-            $_SESSION['user_nome'] = $user['nome'];           // Nome do usuário
-            $_SESSION['user_perfil'] = $user['perfil'];       // Perfil do usuário
-            $_SESSION['logged_in'] = true;                   // Indica que o usuário está logado
-
-          // Verificar o cargo do utilizador
-if ($user['perfil'] === 'administrador') {
-  echo "<script> 
-          alert('Bem vindo, Administrador!');
-          window.location.href = 'pagina_inicial_admin.html';
-        </script>";
-  exit();
-} elseif ($user['perfil'] === 'funcionário') {
-  echo "<script> 
-          alert('Bem vindo, Funcionário!');
-          window.location.href = 'pagina_inicial_funcionario.html';
-        </script>";
-  exit();
-} else {
-  echo "<script>
-          alert('Bem vindo!');
-          window.location.href = 'pagina_inicial.php';
-        </script>";
-  exit();
-}
+            // Verificar o perfil do utilizador
+            if ($user['perfil'] === 'administrador') {
+                echo "<script>
+                        alert('Bem vindo, Administrador!');
+                        window.location.href = 'pagina_inicial_admin.html';
+                      </script>";
+                exit();
+            } elseif ($user['perfil'] === 'funcionário') {
+                echo "<script>
+                        alert('Bem vindo, Funcionário!');
+                        window.location.href = 'pagina_inicial_funcionario.html';
+                      </script>";
+                exit();
+            } else {
+                echo "<script>
+                        alert('Bem vindo!');
+                        window.location.href = 'pagina_inicial.php';
+                      </script>";
+                exit();
+            }
         } else {
-            echo "<script>alert('Password incorreta, tente novamente.');
-                window.location.href = 'PgLogin.html';
-              </script>";
+            echo "<script>
+                    alert('Password incorreta, tente novamente.');
+                    window.location.href = 'PgLogin.html';
+                  </script>";
         }
     } else {
-        echo "<script>alert('Utilizador nao encontrado, tente novamente.');
-        window.location.href = 'PgLogin.html';
-      </script>";
+        echo "<script>
+                alert('Utilizador não encontrado, tente novamente.');
+                window.location.href = 'PgLogin.html';
+              </script>";
     }
 }
 

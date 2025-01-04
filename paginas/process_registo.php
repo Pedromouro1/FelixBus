@@ -21,7 +21,7 @@ $confirm_pass = $_POST['confirm-pass'];
 // Verifica se as senhas coincidem
 if ($pass !== $confirm_pass) {
     echo "<script>
-            alert('As senhas não coincidem. Tente novamente.');
+            alert('As passwords não são iguais. Tente novamente.');
             window.location.href = 'PgRegisto.html';
           </script>";
     exit();
@@ -35,7 +35,7 @@ $stmt_check_email->execute();
 $stmt_check_email->bind_result($email_exists);
 $stmt_check_email->fetch();
 
-// Liberar o resultado da consulta SELECT para evitar o erro de sincronização
+// Liberar o resultado da consulta SELECT
 $stmt_check_email->free_result();
 
 // Se o e-mail já existir, exibe uma mensagem de erro
@@ -47,8 +47,8 @@ if ($email_exists > 0) {
     exit();
 }
 
-// Criptografa a senha antes de salvar na base de dados
-$hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+// Criptografa a senha com MD5
+$hashed_password = md5($pass);
 
 // Prepara a consulta para inserir os dados
 $sql = "INSERT INTO utilizadores (Nome, Email, Password) VALUES (?, ?, ?)";
