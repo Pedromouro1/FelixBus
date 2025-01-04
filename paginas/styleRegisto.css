@@ -1,0 +1,87 @@
+/* styleClient.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f3f3;
+  }
+  
+  #registro-box {
+    background-color: #333;
+    color: white;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+  }
+  
+  #registro-header {
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 20px;
+  }
+  
+  .input-div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+  }
+  
+  input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  #actions {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  #actions a {
+    color: #28a745;
+    font-size: 14px;
+    display: block;
+    margin: 5px 0;
+    text-decoration: none;
+  }
+  
+  #actions a:hover {
+    text-decoration: underline;
+  }
+  
