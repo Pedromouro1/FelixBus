@@ -1,16 +1,11 @@
 <?php
+include("basedados/basedados.h");
 session_start();
 
 // Verificar permissão de administrador
 if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
     echo "<script>alert('Acesso negado!'); window.location.href = 'pagina_inicial.html';</script>";
     exit();
-}
-
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
 }
 
 // Processar ações de criar/editar/excluir
@@ -41,8 +36,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
 // Inicializar filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
+// Determinar ordenação
+$orderColumn = $_GET['order'] ?? 'nome'; // Ordena por 'nome' por padrão
+$orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc'; // Direção padrão é 'asc'
+
 // Consultar alertas com filtro de pesquisa
-$sql = "SELECT * FROM alertas WHERE Titulo LIKE '%$search%'";
+$sql = "SELECT * FROM alertas WHERE Titulo LIKE '%$search%'
+ORDER BY Titulo $orderDirection";
 $result = $conn->query($sql);
 ?>
 
@@ -88,8 +88,12 @@ $result = $conn->query($sql);
     <button onclick="showForm('create')">Criar Novo Alerta</button>
     <table border="1">
         <tr>
+            
             <th>ID</th>
-            <th>Título</th>
+            <th> <a href="?search=<?= htmlspecialchars($search) ?>&direction=<?= $orderDirection === 'asc' ? 'desc' : 'asc' ?>">
+            titulo     </a>
+           </th>
+       
             <th>Conteúdo</th>
             <th>Tipo</th>
             <th>Data Criação</th>
@@ -134,7 +138,7 @@ $result = $conn->query($sql);
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
     </div>
-    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.php';">Inicio</button>
     <button type="submit" onclick="window.location.href='gerenciar_alertas.php';">Voltar</button>
 </body>
 </html>

@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Verificar se o utilizador está logado e tem perfil de funcionário
+if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'funcionário') {
+    echo "<script>alert('Acesso negado! Apenas funcionários podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -9,7 +19,7 @@
 <body>
   <!-- Barra de navegação -->
   <div id="navbar">
-    <a href="pagina_inicial_funcionario.html">Página Inicial</a>
+    <a href="pagina_inicial_funcionario.php">Página Inicial</a>
     <a href="gerenciar_saldo_FA.php">Visualizar Saldo</a>
     <a href="gerenciar_bilhetes_FA.php">Consultar Bilhetes</a>
     <a href="perfil_FA.php">Editar dados pessoais</a>

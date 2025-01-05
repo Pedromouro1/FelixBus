@@ -1,4 +1,5 @@
 <?php
+include("basedados/basedados.h");
 session_start();
 $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 ?>
@@ -18,8 +19,7 @@ $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       <a href="rotas.php">Rotas</a>
       <a href="tickets.php">Bilhetes</a>
       <a href="carteira.php">Carteira</a>
-      <a href="#">Serviço</a>
-      <a href="#">Ajuda</a>
+      <a href="alertasInicial.php">Alertas</a>
     </nav>
     <div class="user-actions">
   <?php if ($loggedIn): ?>

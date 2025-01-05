@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Verificar permissão de administrador
+if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
+    echo "<script>alert('Acesso negado voçe nao e adminstrador!'); window.location.href = 'pagina_inicial.php';</script>";
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>

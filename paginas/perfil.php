@@ -1,19 +1,14 @@
 <?php
+include("basedados/basedados.h");
 session_start();
 
-// Conexão com a base de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Verificar se o usuário está logado
-if (!isset($_SESSION['Utilizador_id'])) {
-    echo "<script>alert('Por favor, faça login primeiro.'); window.location.href = 'PgLogin.html';</script>";
+// Verificar se o Utilizador está logado e é um cliente
+if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente') {
+    echo "<script>alert('Acesso negado! Apenas clientes podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }
 
-// Obter o ID do usuário logado
+// Obter o ID do Utilizador logado
 $userId = $_SESSION['Utilizador_id'];
 
 // Prevenir SQL Injection ao consultar a base de dados
@@ -25,11 +20,11 @@ $result = $sql->get_result();
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
 } else {
-    echo "<script>alert('Usuário não encontrado!'); window.location.href = 'PgLogin.html';</script>";
+    echo "<script>alert('Utilizador não encontrado!'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }
 
-// Obter o saldo do usuário da tabela 'saldo'
+// Obter o saldo do Utilizador da tabela 'saldo'
 $saldoSql = $conn->prepare("SELECT Saldo FROM saldo WHERE Utilizador_id = ?");
 $saldoSql->bind_param("i", $userId);
 $saldoSql->execute();
@@ -42,7 +37,7 @@ if ($saldoResult->num_rows > 0) {
     $saldo = "0.00"; // Define saldo como 0 caso não tenha registro
 }
 
-// Atualizar os dados do usuário
+// Atualizar os dados do Utilizador
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $conn->real_escape_string($_POST['nome']);
     $email = $conn->real_escape_string($_POST['email']);
@@ -76,7 +71,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styleCliente.css">
-    <title>Perfil do Usuário</title>
+    <title>Perfil do Utilizador</title>
 </head>
 <body>
     <div class="container">

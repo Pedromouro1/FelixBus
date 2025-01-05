@@ -1,19 +1,17 @@
 <?php
-session_start(); // Iniciar a sessão
+include("basedados/basedados.h");
+session_start();
 
-// Verificar se o usuário está logado
-if (!isset($_SESSION['Utilizador_id'])) {
-    die("Acesso negado. Faça login para visualizar os bilhetes.");
+// Verificar se o Utilizador está logado e é um cliente
+if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente') {
+    echo "<script>alert('Acesso negado! Apenas clientes podem acessar esta página.'); window.location.href = 'pagina_inicial.php';</script>";
+    exit();
 }
 
-// ID do usuário logado
+// ID do Utilizador logado
 $Utilizador_id = $_SESSION['Utilizador_id'];
 
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
+
 
 // Inicializar filtro de pesquisa
 $filterRota_id = $_GET['rota_id'] ?? '';
@@ -70,7 +68,6 @@ while ($row = $result->fetch_assoc()) {
         <table>
             <thead>
                 <tr>
-                    <th>ID do Utilizador</th>
                     <th>ID da Rota</th>
                     <th>Data da Viagem</th>
                     <th>Horário</th>
@@ -79,7 +76,6 @@ while ($row = $result->fetch_assoc()) {
             <tbody>
                 <?php foreach ($bilhetes as $bilhete): ?>
                     <tr>
-                        <td><?= htmlspecialchars($bilhete['Utilizador_id'] ?? '') ?></td>
                         <td><?= htmlspecialchars($bilhete['Rota_id'] ?? '') ?></td>
                         <td><?= htmlspecialchars($bilhete['Data_viagem'] ?? '') ?></td>
                         <td><?= htmlspecialchars($bilhete['Horario'] ?? '') ?></td>
@@ -91,4 +87,5 @@ while ($row = $result->fetch_assoc()) {
         <p class="no-results">Nenhum bilhete encontrado.</p>
     <?php endif; ?>
 </body>
+<a href="pagina_inicial.php" class="back-button">Voltar</a>
 </html>

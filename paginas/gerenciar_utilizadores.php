@@ -1,15 +1,11 @@
 <?php
+include("basedados/basedados.h");
 session_start();
+
 // Verificar permissão de administrador
 if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
     echo "<script>alert('Acesso negado!'); window.location.href = 'pagina_inicial.html';</script>";
     exit();
-}
-
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
 }
 
 // Processar as ações de criar/editar/excluir
@@ -21,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $perfil = $_POST['perfil'];
 
     if ($action === 'create') {
-        // Salvar senha diretamente (sem encriptação)
         $password = $_POST['password'];
         $sql = "INSERT INTO utilizadores (nome, email, password, perfil) VALUES ('$nome', '$email', '$password', '$perfil')";
     } elseif ($action === 'edit') {
@@ -31,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Excluir utilizador (via GET)
+// Excluir utilizador
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $id = $_GET['id'];
     $sql = "DELETE FROM utilizadores WHERE id = $id";
@@ -41,8 +36,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
 // Inicializar filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
-// Consultar utilizadores com filtro de pesquisa
-$sql = "SELECT * FROM utilizadores WHERE nome LIKE '%$search%' OR email LIKE '%$search%' OR perfil LIKE '%$search%'";
+// Determinar a direção da ordenação (padrão: asc)
+$orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc';
+
+// Consultar utilizadores com filtro de pesquisa e ordenação por nome
+$sql = "SELECT * FROM utilizadores 
+        WHERE nome LIKE '%$search%' OR email LIKE '%$search%' OR perfil LIKE '%$search%' 
+        ORDER BY nome $orderDirection";
 $result = $conn->query($sql);
 ?>
 
@@ -52,7 +52,6 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Gerenciar Utilizadores</title>
     <script>
-        // Mostrar o formulário para criar ou editar
         function showForm(action, user = null) {
             document.getElementById('form-section').style.display = 'block';
             document.getElementById('action').value = action;
@@ -62,13 +61,13 @@ $result = $conn->query($sql);
                 document.getElementById('nome').value = user.nome;
                 document.getElementById('email').value = user.email;
                 document.getElementById('perfil').value = user.perfil;
-                document.getElementById('password').style.display = 'none'; // Oculta campo de senha
+                document.getElementById('password').style.display = 'none';
             } else {
                 document.getElementById('id').value = '';
                 document.getElementById('nome').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('perfil').value = 'cliente';
-                document.getElementById('password').style.display = 'block'; // Mostra campo de senha
+                document.getElementById('password').style.display = 'block';
             }
         }
     </script>
@@ -89,7 +88,11 @@ $result = $conn->query($sql);
     <table border="1">
         <tr>
             <th>ID</th>
-            <th>Nome</th>
+            <th>
+                <a href="?search=<?= htmlspecialchars($search) ?>&direction=<?= $orderDirection === 'asc' ? 'desc' : 'asc' ?>">
+                    Nome
+                </a>
+            </th>
             <th>Email</th>
             <th>Perfil</th>
             <th>Ações</th>
@@ -97,13 +100,11 @@ $result = $conn->query($sql);
         <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
             <td><?= $row['id'] ?></td>
-            <td><?= $row['nome'] ?></td>
-            <td><?= $row['email'] ?></td>
-            <td><?= $row['perfil'] ?></td>
+            <td><?= htmlspecialchars($row['nome']) ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= htmlspecialchars($row['perfil']) ?></td>
             <td>
-                <!-- Botão Editar chama a função JavaScript com os dados do utilizador -->
                 <button onclick='showForm("edit", <?= json_encode($row) ?>)'>Editar</button>
-                <!-- Link para excluir utilizador -->
                 <a href="?action=delete&id=<?= $row['id'] ?>" onclick="return confirm('Tem certeza que deseja excluir este utilizador?')">Excluir</a>
             </td>
         </tr>
@@ -121,7 +122,7 @@ $result = $conn->query($sql);
             <label>Email:</label><br>
             <input type="email" name="email" id="email" required><br>
             <label id="password-label">Password:</label><br>
-            <input type="text" name="password" id="password"><br> <!-- Campo de senha visível -->
+            <input type="text" name="password" id="password"><br>
             <label>Perfil:</label><br>
             <select name="perfil" id="perfil" required>
                 <option value="cliente">Cliente</option>
@@ -133,12 +134,8 @@ $result = $conn->query($sql);
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
     </div>
-    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
-    <button type="submit" onclick="window.location.href='gerenciar_utilizadores.php';">Voltar</button>
+    <button onclick="window.location.href='pagina_inicial_admin.php';">Inicio</button>
+    <button onclick="window.location.href='gerenciar_utilizadores.php';">Voltar</button>
 </body>
-<head>
-    <meta charset="UTF-8">
-    <title>Gerenciar Utilizadores</title>
-    <link rel="stylesheet" href="style_gerenciar_utilizadores.css">
-</head>
+<link rel="stylesheet" href="style_gerenciar_utilizadores.css">
 </html>

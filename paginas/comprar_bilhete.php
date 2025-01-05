@@ -1,21 +1,11 @@
 <?php
+include("basedados/basedados.h");
 session_start();
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-
-// Verificar conexão
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Verificar se o usuário está logado
-if (!isset($_SESSION['Utilizador_id'])) {
-    die("Acesso negado. Faça login para comprar um bilhete.");
-}
 
 // Obter o ID da rota
 $rota_id = $_GET['id'] ?? null;
 if (!$rota_id) {
-    echo "<p>ID da rota não especificado.</p><a href='index.php' class='button'>Voltar para a página inicial</a>";
+    echo "<p>ID da rota não especificado.</p><a href='pagina_inicial.php' class='button'>Voltar para a página inicial</a>";
     exit;
 }
 
@@ -23,7 +13,7 @@ if (!$rota_id) {
 $sql = "SELECT * FROM rotas WHERE Id = $rota_id";
 $result = $conn->query($sql);
 if ($result->num_rows === 0) {
-    echo "<p>Rota não encontrada.</p><a href='index.php' class='button'>Voltar para a página inicial</a>";
+    echo "<p>Rota não encontrada.</p><a href='pagina_inicial.php' class='button'>Voltar para a página inicial</a>";
     exit;
 }
 
@@ -40,7 +30,7 @@ $utilizador_id = $_SESSION['Utilizador_id'];
 $sql_saldo = "SELECT Saldo FROM saldo WHERE Utilizador_id = $utilizador_id";
 $result_saldo = $conn->query($sql_saldo);
 if ($result_saldo->num_rows === 0) {
-    echo "<p>Saldo não encontrado.</p><a href='index.php' class='button'>Voltar para a página inicial</a>";
+    echo "<p>Voçe nao tem uma carteira registada.</p><a href='pagina_inicial.php' class='button'>Voltar para a página inicial</a>";
     exit;
 }
 

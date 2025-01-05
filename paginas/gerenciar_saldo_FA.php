@@ -1,11 +1,11 @@
 <?php
+include("basedados/basedados.h");
 session_start();
 
-
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
+// Verificar se o utilizador está logado e tem perfil de funcionário
+if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'funcionário') {
+    echo "<script>alert('Acesso negado! Apenas funcionários podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";
+    exit();
 }
 
 // Processar ações de criar/editar/excluir saldo
@@ -15,13 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $utilizador_id = $_POST['utilizador_id'];
     $saldo = $_POST['saldo'];
 
-    if ($action === 'create') {
-        $sql = "INSERT INTO saldo (Utilizador_id, Saldo) VALUES ('$utilizador_id', '$saldo')";
-    } elseif ($action === 'edit') {
-        $sql = "UPDATE saldo SET Utilizador_id = '$utilizador_id', Saldo = '$saldo' WHERE Id = $id";
-    }
+    // Verificar se o Utilizador existe
+    $user_check = $conn->query("SELECT Id FROM utilizadores WHERE Id = '$utilizador_id'");
 
-    $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
+    if ($user_check->num_rows === 0) {
+        $message = "Esse utilizador nao existe";
+    } else {
+        if ($action === 'create') {
+            $sql = "INSERT INTO saldo (Utilizador_id, Saldo) VALUES ('$utilizador_id', '$saldo')";
+        } elseif ($action === 'edit') {
+            $sql = "UPDATE saldo SET Utilizador_id = '$utilizador_id', Saldo = '$saldo' WHERE Id = $id";
+        }
+
+        $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
+    }
 }
 
 // Excluir saldo (via GET)
@@ -38,6 +45,7 @@ $search = $_GET['search'] ?? '';
 $sql = "SELECT * FROM saldo WHERE Utilizador_id LIKE '%$search%' OR Saldo LIKE '%$search%'";
 $result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -112,7 +120,7 @@ $result = $conn->query($sql);
 
 
     
-    <button type="submit" onclick="window.location.href='pagina_inicial_funcionario.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_funcionario.php';">Inicio</button>
     <button type="submit" onclick="window.location.href='gerenciar_saldo_FA.php';">Voltar</button>
 </body>
 <link rel="stylesheet" href="style_gerenciar_rotas.css">

@@ -1,4 +1,5 @@
 <?php
+include("basedados/basedados.h");
 session_start();
 
 // Verificar permissão de administrador
@@ -7,11 +8,8 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
     exit();
 }
 
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
+
+
 
 // Processar ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,13 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $horario = $_POST['horario'];
     $status = $_POST['status'];
 
-    if ($action === 'create') {
-        $sql = "INSERT INTO bilhetes (Utilizador_id, Rota_id, Data_viagem, Horario, Status) VALUES ('$utilizador_id', '$rota_id', '$data_viagem', '$horario', '$status')";
-    } elseif ($action === 'edit') {
-        $sql = "UPDATE bilhetes SET Utilizador_id = '$utilizador_id', Rota_id = '$rota_id', Data_viagem = '$data_viagem', Horario = '$horario', Status = '$status' WHERE Id = $id";
-    }
+    // Verificar se o Utilizador e a Rota existem
+    $user_check = $conn->query("SELECT Id FROM utilizadores WHERE Id = '$utilizador_id'");
+    $rota_check = $conn->query("SELECT Id FROM rotas WHERE Id = '$rota_id'");
 
-    $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
+    if ($user_check->num_rows === 0) {
+        $message = "Nao existe esse utilizador";
+    } elseif ($rota_check->num_rows === 0) {
+        $message = "Nao existe essa rota";
+    } else {
+        if ($action === 'create') {
+            $sql = "INSERT INTO bilhetes (Utilizador_id, Rota_id, Data_viagem, Horario, Status) VALUES ('$utilizador_id', '$rota_id', '$data_viagem', '$horario', '$status')";
+        } elseif ($action === 'edit') {
+            $sql = "UPDATE bilhetes SET Utilizador_id = '$utilizador_id', Rota_id = '$rota_id', Data_viagem = '$data_viagem', Horario = '$horario', Status = '$status' WHERE Id = $id";
+        }
+
+        $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
+    }
 }
 
 // Excluir bilhete (via GET)
@@ -96,7 +104,6 @@ $result = $conn->query($sql);
             <th>Rota</th>
             <th>Data da Viagem</th>
             <th>Horário</th>
-            <th>Status</th>
             <th>Ações</th>
         </tr>
         <?php while ($row = $result->fetch_assoc()): ?>
@@ -106,7 +113,6 @@ $result = $conn->query($sql);
             <td><?= $row['Rota_id'] ?></td>
             <td><?= $row['Data_viagem'] ?></td>
             <td><?= $row['Horario'] ?></td>
-            <td><?= ucfirst($row['Status']) ?></td>
             <td>
                 <button onclick='showForm("edit", <?= json_encode($row) ?>)'>Editar</button>
                 <a href="?action=delete&id=<?= $row['Id'] ?>" onclick="return confirm('Tem certeza que deseja excluir este bilhete?')">Excluir</a>
@@ -139,7 +145,7 @@ $result = $conn->query($sql);
             <button type="button" onclick="document.getElementById('form-section').style.display = 'none';">Cancelar</button>
         </form>
     </div>
-    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.php';">Inicio</button>
     <button type="submit" onclick="window.location.href='gerenciar_bilhetes.php';">Voltar</button>
 </body>
 </html>

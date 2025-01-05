@@ -1,18 +1,6 @@
 <?php
+include("basedados/basedados.h");
 session_start();
-
-// Conexão com a base de dados
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "FelixBus";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verifica a conexão
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
 
 // Verificar se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Comparar a senha criptografada
         if ($encryptedPassword === $user['password']) { // Certifique-se que a coluna se chama 'password'
-            // Iniciar a sessão do usuário
+            // Iniciar a sessão do Utilizador
             $_SESSION['Utilizador_id'] = $user['id'];
             $_SESSION['user_nome'] = $user['nome'];
             $_SESSION['user_perfil'] = $user['perfil'];
@@ -43,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['perfil'] === 'administrador') {
                 echo "<script>
                         alert('Bem vindo, Administrador!');
-                        window.location.href = 'pagina_inicial_admin.html';
+                        window.location.href = 'pagina_inicial_admin.php';
                       </script>";
                 exit();
             } elseif ($user['perfil'] === 'funcionário') {
                 echo "<script>
                         alert('Bem vindo, Funcionário!');
-                        window.location.href = 'pagina_inicial_funcionario.html';
+                        window.location.href = 'pagina_inicial_funcionario.php';
                       </script>";
                 exit();
             } else {

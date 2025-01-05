@@ -1,15 +1,11 @@
 <?php
+include("basedados/basedados.h");
 session_start();
+
 // Verificar permissão de administrador
 if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
     echo "<script>alert('Acesso negado!'); window.location.href = 'pagina_inicial.html';</script>";
     exit();
-}
-
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
 }
 
 // Processar as ações de criar/editar/excluir
@@ -42,8 +38,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
 // Inicializar filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
-// Consultar rotas com filtro de pesquisa
-$sql = "SELECT * FROM rotas WHERE Origem LIKE '%$search%' OR Destino LIKE '%$search%' OR Preço LIKE '%$search%'";
+// Determinar a direção da ordenação (padrão: asc)
+$orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc';
+
+// Consultar rotas com filtro de pesquisa e ordenação por Origem
+$sql = "SELECT * FROM rotas 
+        WHERE Origem LIKE '%$search%' OR Destino LIKE '%$search%' OR Preço LIKE '%$search%' 
+        ORDER BY Origem $orderDirection";
 $result = $conn->query($sql);
 ?>
 
@@ -92,7 +93,11 @@ $result = $conn->query($sql);
     <table border="1">
         <tr>
             <th>ID</th>
-            <th>Origem</th>
+            <th>
+                <a href="?search=<?= htmlspecialchars($search) ?>&direction=<?= $orderDirection === 'asc' ? 'desc' : 'asc' ?>">
+                    Origem
+                </a>
+            </th>
             <th>Destino</th>
             <th>Preço</th>
             <th>Capacidade</th>
@@ -103,12 +108,12 @@ $result = $conn->query($sql);
         <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
             <td><?= $row['Id'] ?></td>
-            <td><?= $row['Origem'] ?></td>
-            <td><?= $row['Destino'] ?></td>
-            <td><?= $row['Preço'] ?></td>
-            <td><?= $row['Capacidade'] ?></td>
-            <td><?= $row['Horário'] ?></td>
-            <td><?= $row['Data_criacao'] ?></td>
+            <td><?= htmlspecialchars($row['Origem']) ?></td>
+            <td><?= htmlspecialchars($row['Destino']) ?></td>
+            <td><?= htmlspecialchars($row['Preço']) ?></td>
+            <td><?= htmlspecialchars($row['Capacidade']) ?></td>
+            <td><?= htmlspecialchars($row['Horário']) ?></td>
+            <td><?= htmlspecialchars($row['Data_criacao']) ?></td>
             <td>
                 <button onclick='showForm("edit", <?= json_encode($row) ?>)'>Editar</button>
                 <a href="?action=delete&id=<?= $row['Id'] ?>" onclick="return confirm('Tem certeza que deseja excluir esta rota?')">Excluir</a>
@@ -138,12 +143,8 @@ $result = $conn->query($sql);
         </form>
     </div>
 
-    <button type="submit" onclick="window.location.href='pagina_inicial_admin.html';">Inicio</button>
+    <button type="submit" onclick="window.location.href='pagina_inicial_admin.php';">Inicio</button>
     <button type="submit" onclick="window.location.href='gerenciar_rotas.php';">Voltar</button>
 </body>
-<head>
-    <meta charset="UTF-8">
-    <title>Gerenciar Rotas</title>
-    <link rel="stylesheet" href="style_gerenciar_rotas.css">
-</head>
+<link rel="stylesheet" href="style_gerenciar_rotas.css">
 </html>

@@ -1,11 +1,6 @@
 <?php
+include("basedados/basedados.h");
 session_start();
-
-// Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "FelixBus");
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
 
 // Inicializar filtro de pesquisa
 $filterOrigem = $_GET['origem'] ?? '';
@@ -63,7 +58,7 @@ $minPrice = !empty($rows) ? min(array_column($rows, 'Preço')) : null;
     <!-- Tabela de resultados -->
     <table>
         <tr>
-            <th>ID</th>
+            <th>Id rota</th>
             <th>Origem</th>
             <th>Destino</th>
             <th>Preço (€)</th>
@@ -75,7 +70,7 @@ $minPrice = !empty($rows) ? min(array_column($rows, 'Preço')) : null;
         <?php if (!empty($rows)): ?>
             <?php foreach ($rows as $row): ?>
             <tr class="<?= ($row['Preço'] == $minPrice) ? 'highlight' : '' ?>">
-                <td><?= $row['Id'] ?></td>
+            <td><?= htmlspecialchars($row['Id']) ?></td>
                 <td><?= htmlspecialchars($row['Origem']) ?></td>
                 <td><?= htmlspecialchars($row['Destino']) ?></td>
                 <td><?= htmlspecialchars($row['Preço']) ?></td>

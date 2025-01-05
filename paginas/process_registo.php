@@ -1,16 +1,7 @@
 <?php
-// Conexão com a base de dados
-$servername = "localhost";
-$username = "root"; // Usuário padrão do MySQL
-$password = ""; // Senha do MySQL
-$dbname = "FelixBus";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verifica a conexão
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
+include("basedados/basedados.h");
+session_start();
 
 // Obtém os dados do formulário
 $user = $_POST['user'];

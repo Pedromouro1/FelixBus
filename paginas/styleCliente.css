@@ -426,7 +426,7 @@ form {
     align-items: center;
 }
 
-/* Remover estilos de form padrão do agente do usuário */
+/* Remover estilos de form padrão do agente do Utilizador */
 form {
     display: block;
     margin-top: 0;
