@@ -1,5 +1,5 @@
 <?php
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 $loggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 ?>

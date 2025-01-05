@@ -1,5 +1,5 @@
 <?php
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 
 // Verificar se o utilizador está logado e tem perfil de funcionário

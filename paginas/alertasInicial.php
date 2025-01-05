@@ -1,5 +1,5 @@
 <?php
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 
 // Variáveis de pesquisa com valores recebidos via GET

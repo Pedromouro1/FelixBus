@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 
 if (!isset($_SESSION['Utilizador_id']) || ($_SESSION['user_perfil'] !== 'cliente' && $_SESSION['user_perfil'] !== 'administrador')) {
     echo "<script>alert('Acesso negado! Apenas clientes podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";

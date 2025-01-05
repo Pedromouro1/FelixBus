@@ -1,6 +1,6 @@
 <?php
 
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 
 // Obtém os dados do formulário

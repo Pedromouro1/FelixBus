@@ -1,5 +1,5 @@
 <?php
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 
 // Destrói todas as variáveis de sessão

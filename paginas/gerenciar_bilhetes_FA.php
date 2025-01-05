@@ -1,5 +1,5 @@
 <?php
-include("basedados/basedados.h");
+include("../basedados/basedados.h");
 session_start();
 
 // Verificar se o utilizador está logado e tem perfil de funcionário
@@ -99,7 +99,7 @@ $result = $conn->query($sql); //executa a comsulta
     </form>
 
     <button onclick="showForm('create')">Criar Novo Bilhete</button>
-    <table border="1">
+    <table >
         <tr>
             <th>ID</th>
             <th>Utilizador</th>
