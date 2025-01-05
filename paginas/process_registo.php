@@ -20,14 +20,14 @@ if ($pass !== $confirm_pass) {
 
 // Verificar se o e-mail já está registrado
 $sql_check_email = "SELECT COUNT(*) FROM utilizadores WHERE Email = ?";
-$stmt_check_email = $conn->prepare($sql_check_email);
-$stmt_check_email->bind_param("s", $email);
-$stmt_check_email->execute();
-$stmt_check_email->bind_result($email_exists);
-$stmt_check_email->fetch();
+$preparaconsulta_check_email = $conn->prepare($sql_check_email);
+$preparaconsulta_check_email->bind_param("s", $email);
+$preparaconsulta_check_email->execute();
+$preparaconsulta_check_email->bind_result($email_exists);
+$preparaconsulta_check_email->fetch();
 
 //resultado da consulta SELECT
-$stmt_check_email->free_result();
+$preparaconsulta_check_email->free_result();
 
 // Se o e-mail já existir, exibe uma mensagem de erro
 if ($email_exists > 0) {
@@ -43,11 +43,11 @@ $hashed_password = md5($pass);
 
 // Prepara a consulta para inserir os dados
 $sql = "INSERT INTO utilizadores (Nome, Email, Password) VALUES (?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $user, $email, $hashed_password); //sss para string, string, string
+$preparaconulta = $conn->prepare($sql);
+$preparaconulta->bind_param("sss", $user, $email, $hashed_password); 
 
 // Executa a consulta e verifica sucesso
-if ($stmt->execute()) {
+if ($preparaconulta->execute()) {
     echo "<script>
             alert('Registro realizado com sucesso! Pode fazer login agora.');
             window.location.href = 'PgLogin.html';

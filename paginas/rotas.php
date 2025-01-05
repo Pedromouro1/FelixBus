@@ -7,7 +7,7 @@ $filterOrigem = $_GET['origem'] ?? '';
 $filterDestino = $_GET['destino'] ?? '';
 $filterPreco = $_GET['preco'] ?? '';
 
-// Construir a query SQL dinamicamente com filtros
+// query para os filtros
 $sql = "SELECT * FROM rotas";
 if (!empty($filterOrigem) || !empty($filterDestino) || !empty($filterPreco)) {
     $sql .= " WHERE 1=1"; // Se qualquer filtro for aplicado
@@ -28,15 +28,15 @@ if (!empty($filterOrigem) || !empty($filterDestino) || !empty($filterPreco)) {
 $result = $conn->query($sql);
 
 // Obter os resultados em um array para evitar múltiplas leituras
-$rows = [];
+$resultado = [];
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $rows[] = $row;
+        $resultado[] = $row;
     }
 }
 
 // Determinar o preço mínimo (se necessário)
-$minPrice = !empty($rows) ? min(array_column($rows, 'Preço')) : null;
+$minPrice = !empty($resultado) ? min(array_column($resultado, 'Preço')) : null;
 ?>
 
 <!DOCTYPE html>
@@ -70,8 +70,8 @@ $minPrice = !empty($rows) ? min(array_column($rows, 'Preço')) : null;
             <th>Data Criação</th>
             <th>Ação</th>
         </tr>
-        <?php if (!empty($rows)): ?>
-            <?php foreach ($rows as $row): ?>
+        <?php if (!empty($resultado)): ?>
+            <?php foreach ($resultado as $row): ?>
             <tr class="<?= ($row['Preço'] == $minPrice) ? 'highlight' : '' ?>">
             <td><?= htmlspecialchars($row['Id']) ?></td>
                 <td><?= htmlspecialchars($row['Origem']) ?></td>

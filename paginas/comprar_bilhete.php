@@ -16,7 +16,7 @@ if ($result->num_rows === 0) {
     echo "<p>Rota não encontrada.</p><a href='pagina_inicial.php' class='button'>Voltar para a página inicial</a>";
     exit;
 }
-
+//armazena as informaçao em um array associativo
 $rota = $result->fetch_assoc();
 
 // Verificar capacidade
@@ -42,6 +42,7 @@ if ($saldo < $rota['Preço']) {
 
 // Apos a confirmação da compra
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     // Atualizar capacidade da rota
     $nova_capacidade = $rota['Capacidade'] - 1;
     $sql_update_capacidade = "UPDATE rotas SET Capacidade = $nova_capacidade WHERE Id = $rota_id";
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->query($sql_insert_bilhete);
 
     echo "<p>Bilhete comprado com sucesso!</p><a href='pagina_inicial.php' class='button'>Voltar para a página inicial</a>";
-    exit;
+    exit;   
 }
 ?>
 

@@ -3,7 +3,7 @@ include("basedados/basedados.h");
 session_start();
 
 // Verificar se o utilizador está logado e tem perfil de funcionário
-if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'funcionário') {
+if (!isset($_SESSION['Utilizador_id']) || ($_SESSION['user_perfil'] !== 'funcionário' && $_SESSION['user_perfil'] !== 'administrador')) {
     echo "<script>alert('Acesso negado! Apenas funcionários podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }

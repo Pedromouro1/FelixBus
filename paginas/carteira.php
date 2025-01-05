@@ -2,7 +2,7 @@
 session_start();
 include("basedados/basedados.h");
 
-if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente') {
+if (!isset($_SESSION['Utilizador_id']) || ($_SESSION['user_perfil'] !== 'cliente' && $_SESSION['user_perfil'] !== 'administrador')) {
     echo "<script>alert('Acesso negado! Apenas clientes podem acessar esta página.'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }
@@ -10,37 +10,37 @@ if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente'
 // Obter o saldo atual do Utilizador
 $utilizador_id = $_SESSION['Utilizador_id'];
 $query = "SELECT Saldo FROM saldo WHERE Utilizador_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('i', $utilizador_id); //passa o id como parametro
-$stmt->execute();
-$result = $stmt->get_result();
-$saldo = $result->fetch_assoc()['Saldo'] ?? 0; //ver se e necessario
+$consulta = $conn->prepare($query);
+$consulta->bind_param('i', $utilizador_id); // passa o id como parâmetro
+$consulta->execute();
+$result = $consulta->get_result();
+$saldo = $result->fetch_assoc()['Saldo'] ?? 0; // saldo padrão 0 se não encontrado
 
-// Verificar se o formulário foi requesitado
+// Verificar se o formulário foi requisitado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $acao = $_POST['acao']; //tipo de acao a ser realizada adicionar ou retirar 
-    $valor = floatval($_POST['valor']); // Converte o valor recebido em um número decimal
+    $acao = $_POST['acao']; // tipo de ação: adicionar ou retirar
+    $valor = floatval($_POST['valor']); // converte para número decimal
 
-    if ($valor > 0) {  //verifica se o valor e valido 
+    if ($valor > 0) { // verifica se o valor é válido
         if ($acao === 'adicionar') {
-            $saldo += $valor; //Adiciona
+            $saldo += $valor; // adiciona
         } elseif ($acao === 'retirar') {
             if ($saldo >= $valor) {
-                $saldo -= $valor; //Remove
+                $saldo -= $valor; // remove
             } else {
                 $erro = 'Saldo insuficiente.';
             }
         }
 
-        // Atualiza a base de dados 
+        // Atualiza a base de dados
         if (!isset($erro)) {
-            $update_query = "UPDATE saldo SET Saldo = ? WHERE Utilizador_id = ?"; //Query para atualizar o saldo
-            $stmt = $conn->prepare($update_query);
-            $stmt->bind_param('di', $saldo, $utilizador_id); //passa o saldo e o id como parametro
-            if ($stmt->execute()) {
+            $update_query = "UPDATE saldo SET Saldo = ? WHERE Utilizador_id = ?"; // query para atualizar o saldo
+            $consultaPreparada = $conn->prepare($update_query);
+            $consultaPreparada->bind_param('di', $saldo, $utilizador_id); // passa o saldo e o id como parâmetro
+            if ($consultaPreparada->execute()) {
                 $mensagem = "Saldo atualizado com sucesso!";
             } else {
-                $erro = "Erro ao atualizar o saldo: " . $stmt->error;
+                $erro = "Erro ao atualizar o saldo: " . $consultaPreparada->error;
             }
         }
     } else {

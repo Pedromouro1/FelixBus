@@ -3,7 +3,7 @@ include("basedados/basedados.h");
 session_start();
 
 // Verificar permissão de administrador
-if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
+if (!isset($_SESSION['user_perfil']) || ($_SESSION['user_perfil'] !== 'funcionário' && $_SESSION['user_perfil'] !== 'administrador')) {
     echo "<script>alert('Acesso negado!'); window.location.href = 'pagina_inicial.html';</script>";
     exit();
 }

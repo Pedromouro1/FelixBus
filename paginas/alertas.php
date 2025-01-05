@@ -11,11 +11,11 @@ $ativo = $_POST['ativo'];
 
 // Prepara a consulta SQL para inserir os dados na tabela
 $sql = "INSERT INTO Alertas (Titulo, Conteudo, Tipo, Data_criacao, Ativo) VALUES (?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql); //para evitar sql injection
-$stmt->bind_param("ssssi", $titulo, $conteudo, $tipo, $data_criacao, $ativo);
+$consultaPreparada = $conn->prepare($sql); //para evitar sql injection
+$consultaPreparada->bind_param("ssssi", $titulo, $conteudo, $tipo, $data_criacao, $ativo);
 
 // Executa a consulta
-if ($stmt->execute()) {
+if ($consultaPreparada->execute()) {
   //caso de 
     echo "<script>
             alert('Alerta inserido com sucesso!');

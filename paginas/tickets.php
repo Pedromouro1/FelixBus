@@ -3,7 +3,7 @@ include("basedados/basedados.h");
 session_start();
 
 // Verificar se o Utilizador está logado e é um cliente
-if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente') {
+if (!isset($_SESSION['Utilizador_id']) || ($_SESSION['user_perfil'] !== 'cliente' && $_SESSION['user_perfil'] !== 'administrador')) {
     echo "<script>alert('Acesso negado! Apenas clientes podem acessar esta página.'); window.location.href = 'pagina_inicial.php';</script>";
     exit();
 }
@@ -11,35 +11,33 @@ if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente'
 // ID do Utilizador logado
 $Utilizador_id = $_SESSION['Utilizador_id'];
 
-
-
 // Inicializar filtro de pesquisa
 $filterRota_id = $_GET['rota_id'] ?? '';
 $filterHorario = $_GET['horario'] ?? '';
 
-// Inicializar $types e $params
-$types = 'i'; // 'i' para Inteiro (Utilizador_id)
-$params = [$Utilizador_id];
+// Inicializar $tipodado e $dado 
+$tipodado = 'i'; // 'i' para Inteiro (Utilizador_id)
+$dado = [$Utilizador_id];
 
 // Construir a query SQL dinamicamente com filtros
 $sql = "SELECT * FROM bilhetes WHERE Utilizador_id = ?";
 if (!empty($filterRota_id)) {
     $sql .= " AND Rota_id LIKE ?";
-    $params[] = '%' . $filterRota_id . '%';
-    $types .= 's';
+    $dado [] = '%' . $filterRota_id . '%';
+    $tipodado .= 's';
 }
 if (!empty($filterHorario)) {
     $sql .= " AND Horario LIKE ?";
-    $params[] = '%' . $filterHorario . '%';
-    $types .= 's';
+    $dado [] = '%' . $filterHorario . '%';
+    $tipodado .= 's';
 }
 
-$stmt = $conn->prepare($sql);
-if ($types) {
-    $stmt->bind_param($types, ...$params);
+$preparaconsulta = $conn->prepare($sql);
+if ($tipodado) {
+    $preparaconsulta->bind_param($tipodado, ...$dado );
 }
-$stmt->execute();
-$result = $stmt->get_result();
+$preparaconsulta->execute();
+$result = $preparaconsulta->get_result();
 
 // Processar os resultados em uma matriz
 $bilhetes = [];

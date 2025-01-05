@@ -2,29 +2,23 @@
 include("basedados/basedados.h");
 session_start();
 
-// varaiveis de pesquisa com valores recebidos via get
+// Variáveis de pesquisa com valores recebidos via GET
 $filterTitulo = $_GET['titulo'] ?? '';
-$filterTipo = $_GET['tipo'] ?? '';
 
 // Construir a query SQL incluindo os filtros
 $sql = "SELECT * FROM alertas";
-if (!empty($filterTitulo) || !empty($filterTipo)) {
-    $sql .= " WHERE 1=1";
-    if (!empty($filterTitulo)) {  //filtro para o titulo
-        $sql .= " AND Titulo LIKE '%" . $conn->real_escape_string($filterTitulo) . "%'";
-    }
-    if (!empty($filterTipo)) {    //filtro para o tipo
-        $sql .= " AND Tipo = '" . $conn->real_escape_string($filterTipo) . "'";
-    }
+if (!empty($filterTitulo)) {
+    $sql .= " WHERE Titulo LIKE '%" . $conn->real_escape_string($filterTitulo) . "%'";
 }
-//executa e armazena
+
+// Executa a consulta e armazena os resultados
 $result = $conn->query($sql);
 
-// Faz um array para aramazenar os resultados
-$rows = [];
+// Se houver resultados, são armazenados no array
+$resultado = [];
 if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $rows[] = $row; //adiciona a linha ao array de resultados
+    while ($linha = $result->fetch_assoc()) {
+        $resultado[] = $linha; // Adiciona a linha ao array de resultados
     }
 }
 ?>
@@ -54,14 +48,13 @@ if ($result && $result->num_rows > 0) {
             <th>Tipo</th>
             <th>Data Criação</th>
         </tr>
-        <?php if (!empty($rows)): ?>
-            <?php foreach ($rows as $row): ?>
+        <?php if (!empty($resultado)): ?>
+            <?php foreach ($resultado as $linha): ?>
             <tr>
-                <td><?= htmlspecialchars($row['Titulo']) ?></td>
-                <td><?= htmlspecialchars($row['Conteudo']) ?></td>
-                <td><?= htmlspecialchars(ucfirst($row['Tipo'])) ?></td>
-                <td><?= htmlspecialchars($row['Data_criacao']) ?></td>
-                </td>
+                <td><?= htmlspecialchars($linha['Titulo']) ?></td>
+                <td><?= htmlspecialchars($linha['Conteudo']) ?></td>
+                <td><?= htmlspecialchars(ucfirst($linha['Tipo'])) ?></td>
+                <td><?= htmlspecialchars($linha['Data_criacao']) ?></td>
             </tr>
             <?php endforeach; ?>
         <?php else: ?> <!-- Caso não haja resultados -->

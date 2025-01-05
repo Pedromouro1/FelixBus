@@ -52,7 +52,7 @@ $search = $_GET['search'] ?? '';
 
 // Consultar bilhetes com filtro de pesquisa
 $sql = "SELECT * FROM bilhetes WHERE Utilizador_id LIKE '%$search%' OR Rota_id LIKE '%$search%'";
-$result = $conn->query($sql); //executa a comsulta
+$result = $conn->query($sql); //executa a consulta
 ?>
 
 <!DOCTYPE html>

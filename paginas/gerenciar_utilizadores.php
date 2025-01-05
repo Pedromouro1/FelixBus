@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'];
         $sql = "INSERT INTO utilizadores (nome, email, password, perfil) VALUES ('$nome', '$email', '$password', '$perfil')";
     } elseif ($action === 'edit') {
-            //se existir edita
+    //se existir edita
         $sql = "UPDATE utilizadores SET nome = '$nome', email = '$email', perfil = '$perfil' WHERE id = $id";
     }
 
     $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
 }
-
+                    
 //  Açao de excluir
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $id = $_GET['id'];
