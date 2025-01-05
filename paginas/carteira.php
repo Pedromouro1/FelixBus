@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="error"><?php echo $erro; ?></div>
         <?php endif; ?>
 
-        <h2>Adicionar/Retirar Saldo</h2>
+        <h2>Adicionar/Levantar Saldo</h2>
         <form method="POST">
             <label for="valor">Valor:</label>
             <input type="number" id="valor" name="valor" step="0.01" min="0.01" required>
