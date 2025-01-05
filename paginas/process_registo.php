@@ -9,7 +9,7 @@ $email = $_POST['email'];
 $pass = $_POST['pass'];
 $confirm_pass = $_POST['confirm-pass'];
 
-// Verifica se as senhas coincidem
+// Verifica se as passwords coincidem
 if ($pass !== $confirm_pass) {
     echo "<script>
             alert('As passwords não são iguais. Tente novamente.');
@@ -26,7 +26,7 @@ $stmt_check_email->execute();
 $stmt_check_email->bind_result($email_exists);
 $stmt_check_email->fetch();
 
-// Liberar o resultado da consulta SELECT
+//resultado da consulta SELECT
 $stmt_check_email->free_result();
 
 // Se o e-mail já existir, exibe uma mensagem de erro
@@ -44,7 +44,7 @@ $hashed_password = md5($pass);
 // Prepara a consulta para inserir os dados
 $sql = "INSERT INTO utilizadores (Nome, Email, Password) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $user, $email, $hashed_password);
+$stmt->bind_param("sss", $user, $email, $hashed_password); //sss para string, string, string
 
 // Executa a consulta e verifica sucesso
 if ($stmt->execute()) {

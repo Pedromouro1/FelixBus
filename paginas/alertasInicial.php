@@ -2,29 +2,29 @@
 include("basedados/basedados.h");
 session_start();
 
-// Inicializar filtro de pesquisa
+// varaiveis de pesquisa com valores recebidos via get
 $filterTitulo = $_GET['titulo'] ?? '';
 $filterTipo = $_GET['tipo'] ?? '';
 
-// Construir a query SQL dinamicamente com filtros
+// Construir a query SQL incluindo os filtros
 $sql = "SELECT * FROM alertas";
 if (!empty($filterTitulo) || !empty($filterTipo)) {
     $sql .= " WHERE 1=1";
-    if (!empty($filterTitulo)) {
+    if (!empty($filterTitulo)) {  //filtro para o titulo
         $sql .= " AND Titulo LIKE '%" . $conn->real_escape_string($filterTitulo) . "%'";
     }
-    if (!empty($filterTipo)) {
+    if (!empty($filterTipo)) {    //filtro para o tipo
         $sql .= " AND Tipo = '" . $conn->real_escape_string($filterTipo) . "'";
     }
 }
-
+//executa e armazena
 $result = $conn->query($sql);
 
-// Obter os resultados em um array para evitar múltiplas leituras
+// Faz um array para aramazenar os resultados
 $rows = [];
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $rows[] = $row;
+        $rows[] = $row; //adiciona a linha ao array de resultados
     }
 }
 ?>
@@ -64,7 +64,7 @@ if ($result && $result->num_rows > 0) {
                 </td>
             </tr>
             <?php endforeach; ?>
-        <?php else: ?>
+        <?php else: ?> <!-- Caso não haja resultados -->
             <tr>
                 <td colspan="6">Nenhum alerta encontrado.</td>
             </tr>

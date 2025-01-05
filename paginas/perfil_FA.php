@@ -12,14 +12,15 @@ if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'funcion�
 $userId = $_SESSION['Utilizador_id'];
 
 // Prevenir SQL Injection ao consultar a base de dados
-$sql = $conn->prepare("SELECT * FROM utilizadores WHERE id = ?");
-$sql->bind_param("i", $userId);
+$sql = $conn->prepare("SELECT * FROM utilizadores WHERE id = ?"); // Prepara a consulta com a utilização de placeholders
+$sql->bind_param("i", $userId); // Vincula o parâmetro à consulta (ID do utilizador como inteiro)
 $sql->execute();
-$result = $sql->get_result();
+$result = $sql->get_result(); // Obtém o resultado da consulta
 
+// Verifica se o utilizador foi encontrado na base de dados
 if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-} else {
+    $user = $result->fetch_assoc();  // Armazena os dados do utilizador encontrado
+} else { 
     echo "<script>alert('Utilizador não encontrado!'); window.location.href = 'PgLogin.html';</script>";
     exit();
 }

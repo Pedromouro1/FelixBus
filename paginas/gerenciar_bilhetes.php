@@ -8,10 +8,7 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
     exit();
 }
 
-
-
-
-// Processar ações de criar/editar/excluir
+//Ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
@@ -25,25 +22,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_check = $conn->query("SELECT Id FROM utilizadores WHERE Id = '$utilizador_id'");
     $rota_check = $conn->query("SELECT Id FROM rotas WHERE Id = '$rota_id'");
 
+     // Verifica se o utilizador ou a rota existem no pagina_inicial_funcionario.php
     if ($user_check->num_rows === 0) {
         $message = "Nao existe esse utilizador";
     } elseif ($rota_check->num_rows === 0) {
         $message = "Nao existe essa rota";
     } else {
+         // Se existirem cria
         if ($action === 'create') {
             $sql = "INSERT INTO bilhetes (Utilizador_id, Rota_id, Data_viagem, Horario, Status) VALUES ('$utilizador_id', '$rota_id', '$data_viagem', '$horario', '$status')";
         } elseif ($action === 'edit') {
+             // Se existirem edita
             $sql = "UPDATE bilhetes SET Utilizador_id = '$utilizador_id', Rota_id = '$rota_id', Data_viagem = '$data_viagem', Horario = '$horario', Status = '$status' WHERE Id = $id";
         }
-
+        //executa a query e retorna uma mensagem
         $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
     }
 }
 
-// Excluir bilhete (via GET)
+// Açao de excluir
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM bilhetes WHERE Id = $id";
+    $id = $_GET['id']; // ID do bilhete a ser excluído
+    $sql = "DELETE FROM bilhetes WHERE Id = $id"; // Query para excluir
     $message = $conn->query($sql) ? "Bilhete excluído com sucesso!" : "Erro: " . $conn->error;
 }
 
@@ -52,7 +52,7 @@ $search = $_GET['search'] ?? '';
 
 // Consultar bilhetes com filtro de pesquisa
 $sql = "SELECT * FROM bilhetes WHERE Utilizador_id LIKE '%$search%' OR Rota_id LIKE '%$search%'";
-$result = $conn->query($sql);
+$result = $conn->query($sql); //executa a comsulta
 ?>
 
 <!DOCTYPE html>

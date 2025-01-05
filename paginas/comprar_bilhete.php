@@ -40,7 +40,7 @@ if ($saldo < $rota['Preço']) {
     exit;
 }
 
-// Confirmar a compra (exibir tela de confirmação antes de registrar a compra)
+// Apos a confirmação da compra
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Atualizar capacidade da rota
     $nova_capacidade = $rota['Capacidade'] - 1;
@@ -52,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql_update_saldo = "UPDATE saldo SET Saldo = $novo_saldo WHERE Utilizador_id = $utilizador_id";
     $conn->query($sql_update_saldo);
 
-    // Obter saldo atual da FelixBus antes da transferência
+    // Obter e atualiza o saldo da felixbus
     $sql_saldo_felixbus = "SELECT Saldo FROM saldo WHERE Utilizador_id = 1";
     $saldo_felixbus_antes = $conn->query($sql_saldo_felixbus)->fetch_assoc()['Saldo'];
 
-    // Transferir valor para a conta FelixBus (Utilizador_id = 1)
+    // Tranfer esse valor para a conta da felixbus que neste caso é a conta 1
     $valor_transferencia = $rota['Preço'];
     $sql_update_saldo_felixbus = "UPDATE saldo SET Saldo = Saldo + $valor_transferencia WHERE Utilizador_id = 1";
     $conn->query($sql_update_saldo_felixbus);
@@ -64,13 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obter saldo da FelixBus depois da transferência
     $saldo_felixbus_depois = $saldo_felixbus_antes + $valor_transferencia;
 
-    // Registrar operação na tabela de auditoria
+    // Regista a operaçao na base de dados
     $sql_auditoria_cliente = "
         INSERT INTO auditoria (operacao, carteira_origem, carteira_destino, valor, saldo_origem_antes, saldo_origem_depois, saldo_destino_antes, saldo_destino_depois) 
         VALUES ('Compra de bilhete - Rota $rota_id', $utilizador_id, 1, $valor_transferencia, $saldo, $novo_saldo, $saldo_felixbus_antes, $saldo_felixbus_depois)";
     $conn->query($sql_auditoria_cliente);
 
-    // Registrar o bilhete
+    // Registrar o bilhete na base de dados
     $data_viagem = $rota['Data_criacao']; // Ajuste aqui conforme necessário
     $horario = $rota['Horário'];
     $sql_insert_bilhete = "

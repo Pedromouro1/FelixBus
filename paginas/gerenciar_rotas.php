@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
     exit();
 }
 
-// Processar as ações de criar/editar/excluir
+//Ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
@@ -19,26 +19,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $horario = $_POST['horario'];
 
     if ($action === 'create') {
+        //para criar
         $sql = "INSERT INTO rotas (Origem, Destino, Preço, Capacidade, Horário, Data_criacao) 
                 VALUES ('$origem', '$destino', '$preco', '$capacidade', '$horario', CURDATE())";
+        //para editar
     } elseif ($action === 'edit') {
         $sql = "UPDATE rotas SET Origem = '$origem', Destino = '$destino', Preço = '$preco', Capacidade = '$capacidade', Horário = '$horario' WHERE Id = $id";
     }
-
+    //executa a query e retorna uma mensagem
     $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Excluir rota (via GET)
+//  Açao de excluir
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM rotas WHERE Id = $id";
+    $id = $_GET['id']; // ID da rota  a ser excluído
+    $sql = "DELETE FROM rotas WHERE Id = $id"; // Query para excluir
     $message = $conn->query($sql) ? "Rota excluída com sucesso!" : "Erro: " . $conn->error;
 }
 
 // Inicializar filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
-// Determinar a direção da ordenação (padrão: asc)
+// Determinar a direção da ordenação 
 $orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc';
 
 // Consultar rotas com filtro de pesquisa e ordenação por Origem

@@ -8,7 +8,7 @@ if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'funcion�
     exit();
 }
 
-// Processar ações de criar/editar/excluir saldo
+//Ações de criar/editar/excluir saldo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
@@ -21,9 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user_check->num_rows === 0) {
         $message = "Esse utilizador nao existe";
     } else {
+        //se existir cria
         if ($action === 'create') {
             $sql = "INSERT INTO saldo (Utilizador_id, Saldo) VALUES ('$utilizador_id', '$saldo')";
         } elseif ($action === 'edit') {
+        //se existir edita
             $sql = "UPDATE saldo SET Utilizador_id = '$utilizador_id', Saldo = '$saldo' WHERE Id = $id";
         }
 
@@ -31,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Excluir saldo (via GET)
+//  Açao de excluir
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM saldo WHERE Id = $id";
+    $id = $_GET['id']; // ID do saldo a ser excluído
+    $sql = "DELETE FROM saldo WHERE Id = $id";  // Query para excluir
     $message = $conn->query($sql) ? "Registro excluído com sucesso!" : "Erro: " . $conn->error;
 }
 

@@ -11,4 +11,4 @@ session_destroy();
 // Redireciona para a página inicial
 header("Location: pagina_inicial.php");
 exit;
-?>
+?> 

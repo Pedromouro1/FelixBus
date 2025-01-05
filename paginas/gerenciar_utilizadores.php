@@ -8,25 +8,26 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
     exit();
 }
 
-// Processar as ações de criar/editar/excluir
+//Ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $perfil = $_POST['perfil'];
-
+   //se existir cria
     if ($action === 'create') {
         $password = $_POST['password'];
         $sql = "INSERT INTO utilizadores (nome, email, password, perfil) VALUES ('$nome', '$email', '$password', '$perfil')";
     } elseif ($action === 'edit') {
+            //se existir edita
         $sql = "UPDATE utilizadores SET nome = '$nome', email = '$email', perfil = '$perfil' WHERE id = $id";
     }
 
     $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Excluir utilizador
+//  Açao de excluir
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $id = $_GET['id'];
     $sql = "DELETE FROM utilizadores WHERE id = $id";
@@ -36,7 +37,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete') {
 // Inicializar filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
-// Determinar a direção da ordenação (padrão: asc)
+// Determinar a direção da ordenação 
 $orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc';
 
 // Consultar utilizadores com filtro de pesquisa e ordenação por nome

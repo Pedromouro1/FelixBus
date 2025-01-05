@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "SELECT * FROM utilizadores WHERE (nome = '$usernameOrEmail' OR email = '$usernameOrEmail')";
     $result = $conn->query($sql);
 
+    // Verificar se a consulta encontrou algum utilizador
     if ($result->num_rows > 0) {
+         // Se encontrou o utilizador, extrai os dados da primeira linha
         $user = $result->fetch_assoc();
 
         // Comparar a senha criptografada

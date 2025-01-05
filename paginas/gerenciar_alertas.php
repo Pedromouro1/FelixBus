@@ -10,40 +10,43 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
 
 // Processar ações de criar/editar/excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //recopera os dados via post
     $action = $_POST['action'];
     $id = $_POST['id'] ?? null;
     $titulo = $_POST['titulo'];
     $conteudo = $_POST['conteudo'];
     $tipo = $_POST['tipo'];
     $ativo = isset($_POST['ativo']) ? 1 : 0;
-
+    //faz a query dependendo da açao
     if ($action === 'create') {
+        //para inserir um novo alerta
         $sql = "INSERT INTO alertas (Titulo, Conteudo, Tipo, Ativo) VALUES ('$titulo', '$conteudo', '$tipo', $ativo)";
     } elseif ($action === 'edit') {
+        //para editar um alerta
         $sql = "UPDATE alertas SET Titulo = '$titulo', Conteudo = '$conteudo', Tipo = '$tipo', Ativo = $ativo WHERE Id = $id";
     }
-
+    //executa a query  e exibe uma mensagem de sucesso ou erro
     $message = $conn->query($sql) ? "Operação realizada com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Excluir alerta (via GET)
+// Para excluir um alerta
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM alertas WHERE Id = $id";
+    $id = $_GET['id'];  //Apanha o id do alerta a ser excluido 
+    $sql = "DELETE FROM alertas WHERE Id = $id"; 
     $message = $conn->query($sql) ? "Alerta excluído com sucesso!" : "Erro: " . $conn->error;
 }
 
-// Inicializar filtro de pesquisa
+// Filtro de pesquisa
 $search = $_GET['search'] ?? '';
 
-// Determinar ordenação
-$orderColumn = $_GET['order'] ?? 'nome'; // Ordena por 'nome' por padrão
-$orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc'; // Direção padrão é 'asc'
+// Ordenaçao dos dados 
+$orderColumn = $_GET['order'] ?? 'nome'; 
+$orderDirection = ($_GET['direction'] ?? 'asc') === 'asc' ? 'asc' : 'desc'; 
 
-// Consultar alertas com filtro de pesquisa
+// query para consultar alertas com filtro de pesquisa e ordenaçao
 $sql = "SELECT * FROM alertas WHERE Titulo LIKE '%$search%'
 ORDER BY Titulo $orderDirection";
-$result = $conn->query($sql);
+$result = $conn->query($sql); //executa a comsulta 
 ?>
 
 <!DOCTYPE html>

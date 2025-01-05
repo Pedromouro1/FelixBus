@@ -4,10 +4,10 @@ session_start();
 // Verificar permissão de administrador
 if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administrador') {
     echo "<script>alert('Acesso negado voçe nao e adminstrador!'); window.location.href = 'pagina_inicial.php';</script>";
-    exit();
+    exit(); 
 }
-?>
-
+?> 
+ 
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -63,6 +63,7 @@ if (!isset($_SESSION['user_perfil']) || $_SESSION['user_perfil'] !== 'administra
       <h3>Gerenciar Bilhetes</h3>
       <p>Controle e gerencie os bilhetes comprados pelos utilizador.</p>
       <a href="gerenciar_bilhetes.php">Acessar Gerenciamento de Bilhetes</a>
+      
     </div>
   </div>
 </body>

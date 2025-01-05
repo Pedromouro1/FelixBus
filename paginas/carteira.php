@@ -11,32 +11,32 @@ if (!isset($_SESSION['Utilizador_id']) || $_SESSION['user_perfil'] !== 'cliente'
 $utilizador_id = $_SESSION['Utilizador_id'];
 $query = "SELECT Saldo FROM saldo WHERE Utilizador_id = ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param('i', $utilizador_id);
+$stmt->bind_param('i', $utilizador_id); //passa o id como parametro
 $stmt->execute();
 $result = $stmt->get_result();
-$saldo = $result->fetch_assoc()['Saldo'] ?? 0;
+$saldo = $result->fetch_assoc()['Saldo'] ?? 0; //ver se e necessario
 
-// Processar a ação de adicionar ou retirar saldo
+// Verificar se o formulário foi requesitado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $acao = $_POST['acao'];
-    $valor = floatval($_POST['valor']);
+    $acao = $_POST['acao']; //tipo de acao a ser realizada adicionar ou retirar 
+    $valor = floatval($_POST['valor']); // Converte o valor recebido em um número decimal
 
-    if ($valor > 0) {
+    if ($valor > 0) {  //verifica se o valor e valido 
         if ($acao === 'adicionar') {
-            $saldo += $valor;
+            $saldo += $valor; //Adiciona
         } elseif ($acao === 'retirar') {
             if ($saldo >= $valor) {
-                $saldo -= $valor;
+                $saldo -= $valor; //Remove
             } else {
                 $erro = 'Saldo insuficiente.';
             }
         }
 
-        // Atualizar o saldo na base de dados
+        // Atualiza a base de dados 
         if (!isset($erro)) {
-            $update_query = "UPDATE saldo SET Saldo = ? WHERE Utilizador_id = ?";
+            $update_query = "UPDATE saldo SET Saldo = ? WHERE Utilizador_id = ?"; //Query para atualizar o saldo
             $stmt = $conn->prepare($update_query);
-            $stmt->bind_param('di', $saldo, $utilizador_id);
+            $stmt->bind_param('di', $saldo, $utilizador_id); //passa o saldo e o id como parametro
             if ($stmt->execute()) {
                 $mensagem = "Saldo atualizado com sucesso!";
             } else {
@@ -63,8 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
     <main>
         <h2>Saldo Atual</h2>
+        <!-- Para o saldo aparecer com 2 casas decimais -->
         <p><strong id="current-balance">€ <?php echo number_format($saldo, 2, ',', '.'); ?></strong></p>
-
+  <!-- Mensagens de feedback -->
         <?php if (isset($mensagem)): ?>
             <div class="success"><?php echo $mensagem; ?></div>
         <?php elseif (isset($erro)): ?>

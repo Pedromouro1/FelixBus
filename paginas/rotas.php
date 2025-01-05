@@ -10,18 +10,21 @@ $filterPreco = $_GET['preco'] ?? '';
 // Construir a query SQL dinamicamente com filtros
 $sql = "SELECT * FROM rotas";
 if (!empty($filterOrigem) || !empty($filterDestino) || !empty($filterPreco)) {
-    $sql .= " WHERE 1=1";
+    $sql .= " WHERE 1=1"; // Se qualquer filtro for aplicado
     if (!empty($filterOrigem)) {
+        // Adiciona o filtro de Origem se fornecido, usando LIKE 
         $sql .= " AND Origem LIKE '%" . $conn->real_escape_string($filterOrigem) . "%'";
     }
     if (!empty($filterDestino)) {
+         // Adiciona o filtro de Destino se fornecido, usando LIKE
         $sql .= " AND Destino LIKE '%" . $conn->real_escape_string($filterDestino) . "%'";
     }
     if (!empty($filterPreco)) {
+          // Adiciona o filtro de Preço se fornecido
         $sql .= " AND Preço <= " . $conn->real_escape_string($filterPreco);
     }
 }
-
+// Executa a consulta
 $result = $conn->query($sql);
 
 // Obter os resultados em um array para evitar múltiplas leituras
